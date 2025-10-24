@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cart - Johnrick Auto Supply</title>
+  <link rel="stylesheet" href="css.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark py-3">
+    <div class="container">
+      <a class="navbar-brand fw-bold d-flex align-items-center" href="index.html">
+        <img src="images/logo.png" alt="J&S Logo" style="height: 50px; margin-right: 15px;">
+        <span><span style="color:#ff0000;">JOHNRICK</span> AUTO SUPPLY</span>
+      </a>
+      <div class="d-flex">
+        <a href="index.html" class="nav-link text-white"><i class="fa fa-home"></i> Home</a>
+        <a href="login.html" class="nav-link text-white ms-3"><i class="fa fa-user-shield"></i> Admin</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container my-5">
+    <h2>Your Cart</h2>
+    
+    <div id="emptyCart" class="alert alert-info" style="display:none;">
+      Your cart is empty. <a href="index.html">Continue shopping</a>
+    </div>
+
+    <table class="table table-bordered" id="cartTable">
+      <thead>
+        <tr><th>Product</th><th>Price</th><th>Qty</th><th>Total</th><th>Action</th></tr>
+      </thead>
+      <tbody id="cartItems"></tbody>
+    </table>
+
+    <h3 id="cartTotal">Total: ₱0</h3>
+
+    <!-- Checkout Form -->
+    <div id="checkoutSection">
+      <h4 class="mt-5">Checkout</h4>
+      <form id="checkoutForm">
+        <div class="row mb-3">
+          <div class="col">
+            <input type="text" class="form-control" id="checkoutName" placeholder="Full Name" required>
+          </div>
+          <div class="col">
+            <input type="email" class="form-control" id="checkoutEmail" placeholder="Email" required>
+          </div>
+        </div>
+        <input type="text" class="form-control mb-3" id="checkoutAddress" placeholder="Address" required>
+        <select class="form-select mb-3" id="checkoutPayment" required>
+          <option value="">Payment Method</option>
+          <option>GCash</option>
+          <option>PayMaya</option>
+          <option>Debit/Credit Card</option>
+          <option>Cash on Delivery</option>
+        </select>
+        <button type="submit" class="btn btn-danger">Place Order</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Order Receipt Modal -->
+  <div class="modal fade" id="receiptModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header bg-success text-white">
+          <h5 class="modal-title">
+            <i class="fa fa-check-circle me-2"></i> Order Confirmed!
+          </h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body" id="receiptContent">
+          <p class="text-center">Loading receipt...</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" onclick="window.print()">
+            <i class="fa fa-print me-2"></i> Print Receipt
+          </button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <a href="index.html" class="btn btn-success">
+            <i class="fa fa-shopping-bag me-2"></i> Continue Shopping
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js.js"></script>
+  <script>
+    // Debug: Check if everything is loaded
+    console.log('jQuery loaded:', typeof $ !== 'undefined');
+    console.log('Bootstrap loaded:', typeof bootstrap !== 'undefined');
+    console.log('Modal element exists:', document.getElementById('receiptModal') !== null);
+  </script>
+</body>
+</html>

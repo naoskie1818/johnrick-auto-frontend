@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Profile - Johnrick Auto Supply</title>
+  <link rel="stylesheet" href="css.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark py-3">
+    <div class="container">
+      <a class="navbar-brand fw-bold d-flex align-items-center" href="index.html">
+        <img src="images/logo.png" alt="J&S Logo" style="height: 50px; margin-right: 15px;">
+        <span><span style="color:#ff0000;">JOHNRICK</span> AUTO SUPPLY</span>
+      </a>
+      <div class="d-flex">
+        <a href="index.html" class="nav-link text-white"><i class="fa fa-home"></i> Home</a>
+        <a href="cart.html" class="nav-link text-white ms-3"><i class="fa fa-shopping-cart"></i> Cart</a>
+      </div>
+    </div>
+  </nav>
+  <div class="container my-5">
+    <div class="row">
+      <div class="col-md-3">
+        <div class="list-group">
+          <a href="#profileSection" class="list-group-item list-group-item-action active" data-bs-toggle="list">
+            <i class="fa fa-user me-2"></i> My Profile
+          </a>
+          <a href="#settingsSection" class="list-group-item list-group-item-action" data-bs-toggle="list">
+            <i class="fa fa-cog me-2"></i> Settings
+          </a>
+          <button id="logoutProfileBtn" class="list-group-item list-group-item-action text-danger">
+            <i class="fa fa-sign-out me-2"></i> Logout
+          </button>
+        </div>
+      </div>
+      <div class="col-md-9">
+        <div id="profileSection" class="mb-5">
+          <h2 class="mb-4">My Profile</h2>
+          <div class="card">
+            <div class="card-body">
+              <div class="row mb-3">
+                <div class="col-md-2 text-center">
+                  <i class="fa fa-user-circle fa-5x text-danger"></i>
+                </div>
+                <div class="col-md-10">
+                  <h4 id="profileName">Loading...</h4>
+                  <p class="text-muted" id="profileEmail">Loading...</p>
+                  <small class="text-muted">Member since <span id="profileDate">Loading...</span></small>
+                </div>
+              </div>
+              <hr>
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label class="form-label fw-bold">Full Name</label>
+                  <p id="displayName" class="form-control-plaintext">Loading...</p>
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label class="form-label fw-bold">Email</label>
+                  <p id="displayEmail" class="form-control-plaintext">Loading...</p>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label class="form-label fw-bold">Phone</label>
+                  <p id="displayPhone" class="form-control-plaintext">Loading...</p>
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label class="form-label fw-bold">Address</label>
+                  <p id="displayAddress" class="form-control-plaintext">Loading...</p>
+                </div>
+              </div>
+              <button id="editProfileBtn" class="btn btn-danger">
+                <i class="fa fa-edit me-2"></i> Edit Profile
+              </button>
+            </div>
+          </div>
+        </div>
+        <div id="editProfileSection" class="mb-5" style="display:none;">
+          <h2 class="mb-4">Edit Profile</h2>
+          <div class="card">
+            <div class="card-body">
+              <form id="editProfileForm">
+                <div class="row mb-3">
+                  <div class="col-md-6">
+                    <label class="form-label">Full Name</label>
+                    <input type="text" class="form-control" id="editName" required>
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label">Email <small class="text-muted">(Cannot be changed)</small></label>
+                    <input type="email" class="form-control" id="editEmail" disabled>
+                  </div>
+                </div>
+                <div class="row mb-3">
+                  <div class="col-md-6">
+                    <label class="form-label">Phone</label>
+                    <input type="tel" class="form-control" id="editPhone">
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label">Address</label>
+                    <input type="text" class="form-control" id="editAddress">
+                  </div>
+                </div>
+                <div class="row mb-3">
+                  <div class="col-md-6">
+                    <label class="form-label">New Password <small class="text-muted">(Leave blank to keep current)</small></label>
+                    <input type="password" class="form-control" id="editPassword" placeholder="Enter new password">
+                  </div>
+                </div>
+                <div class="alert alert-success" id="editSuccess" style="display:none;">
+                  <i class="fa fa-check-circle me-2"></i> Profile updated successfully!
+                </div>
+                <div class="alert alert-danger" id="editError" style="display:none;"></div>
+                <button type="submit" class="btn btn-danger">
+                  <i class="fa fa-save me-2"></i> Save Changes
+                </button>
+                <button type="button" class="btn btn-secondary ms-2" id="cancelEditBtn">Cancel</button>
+              </form>
+            </div>
+          </div>
+        </div>
+        <div id="settingsSection" class="mb-5" style="display:none;">
+          <h2 class="mb-4">Account Settings</h2>
+          <div class="card">
+            <div class="card-body">
+              <h5>Danger Zone</h5>
+              <p class="text-muted">Once you delete your account, there is no going back. Please be certain.</p>
+              <button id="deleteAccountBtn" class="btn btn-outline-danger">
+                <i class="fa fa-trash me-2"></i> Delete Account
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    const API_URL = 'http://localhost:3000/api';
+    $('[data-bs-toggle="list"]').on('click', function(e) {
+      e.preventDefault();
+      $('#profileSection, #editProfileSection, #settingsSection').hide();
+      $('[data-bs-toggle="list"]').removeClass('active');
+      $(this).addClass('active');
+      const target = $(this).attr('href');
+      $(target).show();
+    });
+    const customer = JSON.parse(sessionStorage.getItem('customer') || 'null');
+    if (!customer) {
+      alert('Please login first');
+      window.location.href = 'index.html';
+    } else {
+      loadCustomerProfile();
+    }
+    async function loadCustomerProfile() {
+      try {
+        const response = await fetch(`${API_URL}/customers/${customer.id}`);
+        const profile = await response.json();
+        $('#profileName').text(profile.name);
+        $('#profileEmail').text(profile.email);
+        $('#profileDate').text(new Date(profile.created_at).toLocaleDateString());
+        $('#displayName').text(profile.name);
+        $('#displayEmail').text(profile.email);
+        $('#displayPhone').text(profile.phone || 'Not provided');
+        $('#displayAddress').text(profile.address || 'Not provided');
+        $('#editName').val(profile.name);
+        $('#editEmail').val(profile.email);
+        $('#editPhone').val(profile.phone || '');
+        $('#editAddress').val(profile.address || '');
+      } catch (error) {
+        console.error('Error loading profile:', error);
+        alert('Error loading profile. Please make sure you are logged in.');
+      }
+    }
+    $('#editProfileBtn').on('click', function() {
+      $('#profileSection').hide();
+      $('#editProfileSection').show();
+    });
+    $('#cancelEditBtn').on('click', function() {
+      $('#editProfileSection').hide();
+      $('#profileSection').show();
+      $('#editSuccess').hide();
+      $('#editError').hide();
+    });
+    $('#editProfileForm').submit(async function(e) {
+      e.preventDefault();
+      const updateData = {
+        name: $('#editName').val(),
+        phone: $('#editPhone').val(),
+        address: $('#editAddress').val()
+      };
+      if ($('#editPassword').val()) {
+        updateData.password = $('#editPassword').val();
+      }
+      try {
+        const response = await fetch(`${API_URL}/customers/${customer.id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(updateData)
+        });
+        if (response.ok) {
+          $('#editSuccess').show();
+          $('#editError').hide();
+          customer.name = updateData.name;
+          customer.phone = updateData.phone;
+          customer.address = updateData.address;
+          sessionStorage.setItem('customer', JSON.stringify(customer));
+          setTimeout(() => {
+            loadCustomerProfile();
+            $('#editProfileSection').hide();
+            $('#profileSection').show();
+            $('#editSuccess').hide();
+          }, 1500);
+        } else {
+          const error = await response.json();
+          $('#editError').text(error.error || 'Error updating profile').show();
+          $('#editSuccess').hide();
+        }
+      } catch (error) {
+        console.error('Error updating profile:', error);
+        $('#editError').text('Error updating profile').show();
+        $('#editSuccess').hide();
+      }
+    });
+    $('#logoutProfileBtn').on('click', function() {
+      if (confirm('Are you sure you want to logout?')) {
+        sessionStorage.removeItem('customer');
+        window.location.href = 'index.html';
+      }
+    });
+    $('#deleteAccountBtn').on('click', async function() {
+      if (!confirm('Are you sure? This will delete your account and all associated data.')) {
+        return;
+      }
+      if (!confirm('This action cannot be undone. Delete account?')) {
+        return;
+      }
+      try {
+        const response = await fetch(`${API_URL}/customers/${customer.id}`, {
+          method: 'DELETE'
+        });
+        if (response.ok) {
+          alert('Account deleted successfully');
+          sessionStorage.removeItem('customer');
+          window.location.href = 'index.html';
+        } else {
+          alert('Error deleting account');
+        }
+      } catch (error) {
+        console.error('Error deleting account:', error);
+        alert('Error deleting account');
+      }
+    });
+  </script>
+</body>
+</html>
