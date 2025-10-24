@@ -1,4 +1,4 @@
-const API_URL = 'johnrick-auto-backend-production.up.railway.app';
+const API_URL = 'johnrick-auto-backend-production.up.railway.app/api';
 
 // ---------------- PRODUCTS ----------------
 let products = [];
