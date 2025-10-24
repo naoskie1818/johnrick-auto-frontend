@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:3000/api';
+const API_URL = 'johnrick-auto-backend-production.up.railway.app';
 
 // ---------------- PRODUCTS ----------------
 let products = [];
