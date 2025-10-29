@@ -157,7 +157,7 @@
     }
     async function loadCustomerProfile() {
   try {
-    const response = await fetch(${API_URL}/customers/${customer.id});
+    const response = await fetch(`${API_URL}/customers/${customer.id}`);
 
     // ⚠️ CRITICAL FIX: Check if the response status is OK (200-299)
     if (!response.ok) {
@@ -175,14 +175,14 @@
     $('#profileDate').text(new Date(profile.created_at).toLocaleDateString());
     $('#displayName').text(profile.name);
     $('#displayEmail').text(profile.email);
-    $('#displayPhone').text(profile.phone  'Not provided');
-    $('#displayAddress').text(profile.address  'Not provided');
+    $('#displayPhone').text(profile.phone || 'Not provided');
+    $('#displayAddress').text(profile.address || 'Not provided');
 
     // Populate the Edit Profile form
     $('#editName').val(profile.name);
     $('#editEmail').val(profile.email);
-    $('#editPhone').val(profile.phone  '');
-    $('#editAddress').val(profile.address  '');
+    $('#editPhone').val(profile.phone || '');
+    $('#editAddress').val(profile.address || '');
 
   } catch (error) {
     // This catch block will now catch both network errors AND non-OK HTTP status codes.
