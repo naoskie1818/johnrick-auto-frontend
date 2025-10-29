@@ -156,25 +156,40 @@
       loadCustomerProfile();
     }
     async function loadCustomerProfile() {
-      try {
-        const response = await fetch(`${API_URL}/customers/${customer.id}`);
-        const profile = await response.json();
-        $('#profileName').text(profile.name);
-        $('#profileEmail').text(profile.email);
-        $('#profileDate').text(new Date(profile.created_at).toLocaleDateString());
-        $('#displayName').text(profile.name);
-        $('#displayEmail').text(profile.email);
-        $('#displayPhone').text(profile.phone || 'Not provided');
-        $('#displayAddress').text(profile.address || 'Not provided');
-        $('#editName').val(profile.name);
-        $('#editEmail').val(profile.email);
-        $('#editPhone').val(profile.phone || '');
-        $('#editAddress').val(profile.address || '');
-      } catch (error) {
-        console.error('Error loading profile:', error);
-        alert('Error loading profile. Please make sure you are logged in.');
-      }
+  try {
+    const response = await fetch(${API_URL}/customers/${customer.id});
+
+    // ⚠️ CRITICAL FIX: Check if the response status is OK (200-299)
+    if (!response.ok) {
+        // If the backend returns 404 or 401, throw an error to catch below
+        console.error('API responded with error status:', response.status);
+        // We throw a generic error to show the alert message.
+        throw new Error('Failed to load profile (Status: ' + response.status + ')');
     }
+
+    const profile = await response.json();
+
+    // Populate the profile fields
+    $('#profileName').text(profile.name);
+    $('#profileEmail').text(profile.email);
+    $('#profileDate').text(new Date(profile.created_at).toLocaleDateString());
+    $('#displayName').text(profile.name);
+    $('#displayEmail').text(profile.email);
+    $('#displayPhone').text(profile.phone  'Not provided');
+    $('#displayAddress').text(profile.address  'Not provided');
+
+    // Populate the Edit Profile form
+    $('#editName').val(profile.name);
+    $('#editEmail').val(profile.email);
+    $('#editPhone').val(profile.phone  '');
+    $('#editAddress').val(profile.address  '');
+
+  } catch (error) {
+    // This catch block will now catch both network errors AND non-OK HTTP status codes.
+    console.error('Error loading profile:', error);
+    alert('Error loading profile. Please make sure you are logged in. (API Failure)');
+  }
+}
     $('#editProfileBtn').on('click', function() {
       $('#profileSection').hide();
       $('#editProfileSection').show();
