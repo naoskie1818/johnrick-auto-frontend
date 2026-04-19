@@ -195,6 +195,30 @@ function renderProducts() {
   }
 }
 
+async function loadManufacturers() {
+    try {
+        const response = await fetch(`${API_URL}/api/manufacturers`);
+        const manufacturers = await response.json();
+        
+        // Find the container for logos (check your index.html for this ID)
+        const container = $('#manufacturersList'); 
+
+        if (container.length) {
+            container.empty();
+            manufacturers.forEach(man => {
+                container.append(`
+                    <div class="col-md-2 text-center mb-4">
+                        <img src="${man.logo_url}" class="img-fluid" alt="${man.name}">
+                        <p>${man.name}</p>
+                    </div>
+                `);
+            });
+        }
+    } catch (error) {
+        console.error('Error loading manufacturers:', error);
+    }
+}
+
 // Show toast notification
 function showNotification(message, type = "success") {
   // Create toast container if it doesn't exist
@@ -1624,9 +1648,14 @@ $('#customerLoginModal').on('show.bs.modal', function() {
   $("#signupSection").hide();
 });
 
-// Load products on page load
+// Load data on page load
 if ($("#product-list").length) {
-  loadProducts();
+    loadProducts();
+}
+
+// Add this part to load the manufacturers
+if ($("#manufacturersList").length) {
+    loadManufacturers();
 }
 
 // Final Fix
