@@ -208,7 +208,7 @@ async function loadManufacturers() {
             manufacturers.forEach(man => {
                 container.append(`
                     <div class="col-md-2 text-center mb-4">
-                        <img src="${man.logo_url}" class="img-fluid" alt="${man.name}">
+                        <img src="${man.logo}" class="img-fluid" alt="${man.name}">
                         <p>${man.name}</p>
                     </div>
                 `);
