@@ -155,7 +155,7 @@ function renderFilteredProducts() {
 // Load categories for search dropdown
 async function loadCategoriesForSearch() {
   try {
-    const response = await fetch(`${API_URL}/categories`);
+    const response = await fetch(`${API_URL}/api/categories`);
     categories = await response.json();
     
     // Update search dropdown on index page
@@ -173,7 +173,7 @@ async function loadCategoriesForSearch() {
 // Load products from database
 async function loadProducts() {
   try {
-    const response = await fetch(`${API_URL}/products`);
+    const response = await fetch(`${API_URL}/api/products`);
     products = await response.json();
     await loadCategoriesForSearch();
     renderProducts();
@@ -515,7 +515,7 @@ $("#checkoutForm").submit(async function(e) {
   let stockError = false;
   try {
     console.log('Fetching fresh product data for stock validation...');
-    const response = await fetch(`${API_URL}/products`);
+    const response = await fetch(`${API_URL}/api/api/products`);
     const freshProducts = await response.json();
     console.log('Fresh products:', freshProducts);
     
@@ -577,7 +577,7 @@ $("#checkoutForm").submit(async function(e) {
   try {
     // Place order
     console.log('Sending order to server...');
-    const response = await fetch(`${API_URL}/orders`, {
+    const response = await fetch(`${API_URL}/api/api/orders`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(orderData)
@@ -596,7 +596,7 @@ $("#checkoutForm").submit(async function(e) {
         const item = itemQuantities[id];
         
         // Fetch current stock
-        const freshResponse = await fetch(`${API_URL}/products`);
+        const freshResponse = await fetch(`${API_URL}/api/api/products`);
         const freshProducts = await freshResponse.json();
         const currentProduct = freshProducts.find(p => p.id == id);
         
@@ -604,7 +604,7 @@ $("#checkoutForm").submit(async function(e) {
           const newStock = currentProduct.stock - item.quantity;
           console.log(`Reducing stock for ${item.name}: ${currentProduct.stock} - ${item.quantity} = ${newStock}`);
           
-          await fetch(`${API_URL}/products/${id}/stock`, {
+          await fetch(`${API_URL}/api/api/products/${id}/stock`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ stock: newStock })
@@ -826,7 +826,7 @@ if ($("#adminCategoryList").length) {
 
 async function loadCategories() {
   try {
-    const response = await fetch(`${API_URL}/categories`);
+    const response = await fetch(`${API_URL}/api/api/categories`);
     categories = await response.json();
     renderCategories();
     updateCategoryDropdowns();
@@ -865,7 +865,7 @@ $("#categoryForm").submit(async function(e) {
   };
   
   try {
-    await fetch(`${API_URL}/categories`, {
+    await fetch(`${API_URL}/api/api/categories`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(newCategory)
@@ -886,7 +886,7 @@ $(document).on("click", ".deleteCategory", async function() {
   
   if (confirm('Are you sure you want to delete this category?')) {
     try {
-      const response = await fetch(`${API_URL}/categories/${id}`, {
+      const response = await fetch(`${API_URL}/api/categories/${id}`, {
         method: 'DELETE'
       });
       
@@ -925,9 +925,9 @@ async function loadAdminCustomers() {
   console.log('=== Loading customers ===');
   
   try {
-    console.log('Fetching from:', `${API_URL}/customers`);
+    console.log('Fetching from:', `${API_URL}/api/customers`);
     
-    const response = await fetch(`${API_URL}/customers`);
+    const response = await fetch(`${API_URL}/api/customers`);
     console.log('Response status:', response.status);
     
     if (!response.ok) {
@@ -1011,7 +1011,7 @@ $(document).on("click", ".deleteCustomer", async function() {
   
   if (confirm('Are you sure you want to delete this customer? This action cannot be undone.')) {
     try {
-      const response = await fetch(`${API_URL}/customers/${id}`, {
+      const response = await fetch(`${API_URL}/api/customers/${id}`, {
         method: 'DELETE'
       });
       
@@ -1054,7 +1054,7 @@ if ($("#adminProductList").length) {
 
 async function loadAdminProducts() {
   try {
-    const response = await fetch(`${API_URL}/products`);
+    const response = await fetch(`${API_URL}/api/products`);
     products = await response.json();
     await loadCategories(); // Load categories first
     renderAdminProducts();
@@ -1100,7 +1100,7 @@ $("#productForm").submit(async function(e) {
   }
   
   try {
-    const response = await fetch(`${API_URL}/products`, {
+    const response = await fetch(`${API_URL}/api/products`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(newProduct)
@@ -1145,7 +1145,7 @@ $(document).on("click", ".editProduct", async function() {
     
     // Load manufacturers for this product
     try {
-      const manufResponse = await fetch(`${API_URL}/products/${id}/manufacturers`);
+      const manufResponse = await fetch(`${API_URL}/api/products/${id}/manufacturers`);
       const manufacturers = await manufResponse.json();
       const selectedIds = manufacturers.map(m => m.id);
       
@@ -1179,7 +1179,7 @@ $("#editProductForm").submit(async function(e) {
   }
   
   try {
-    const response = await fetch(`${API_URL}/products/${id}`, {
+    const response = await fetch(`${API_URL}/api/products/${id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(updatedProduct)
@@ -1212,7 +1212,7 @@ $(document).on("click", ".deleteProduct", async function() {
   
   if (confirm('Are you sure you want to delete this product?')) {
     try {
-      await fetch(`${API_URL}/products/${id}`, {
+      await fetch(`${API_URL}/api/products/${id}`, {
         method: 'DELETE'
       });
       
@@ -1240,7 +1240,7 @@ $("#loginForm").submit(async function(e) {
   console.log('Credentials:', credentials);
   
   try {
-    const response = await fetch(`${API_URL}/login`, {
+    const response = await fetch(`${API_URL}/api/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(credentials)
@@ -1492,7 +1492,7 @@ $("#customerSignupForm").submit(async function(e) {
   console.log('Attempting signup with data:', signupData);
   
   try {
-    const response = await fetch(`${API_URL}/customers/signup`, {
+    const response = await fetch(`${API_URL}/api/customers/signup`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(signupData)
@@ -1534,7 +1534,7 @@ $("#customerLoginForm").submit(async function(e) {
   
   // First, try admin login
   try {
-    const adminResponse = await fetch(`${API_URL}/login`, {
+    const adminResponse = await fetch(`${API_URL}/api/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -1570,7 +1570,7 @@ $("#customerLoginForm").submit(async function(e) {
   // If admin login failed, try customer login
   if (!loginSuccess) {
     try {
-      const customerResponse = await fetch(`${API_URL}/customers/login`, {
+      const customerResponse = await fetch(`${API_URL}/api/customers/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
