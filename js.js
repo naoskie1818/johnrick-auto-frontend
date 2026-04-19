@@ -602,7 +602,7 @@ $("#checkoutForm").submit(async function(e) {
     // Place order
     console.log('Sending order to server...');
     const response = await fetch(`${API_URL}/api/orders`, {
-      method: 'POST',
+		method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(orderData)
     });
