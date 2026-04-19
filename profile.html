@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Profile - Johnrick Auto Supply</title>
+  <link rel="stylesheet" href="css.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark py-3">
+    <div class="container">
+      <a class="navbar-brand fw-bold d-flex align-items-center" href="index.html">
+        <img src="images/logo.png" alt="J&S Logo" style="height: 50px; margin-right: 15px;">
+        <span><span style="color:#ff0000;">JOHNRICK</span> AUTO SUPPLY</span>
+      </a>
+      <div class="d-flex align-items-center">
+        <a href="index.html" class="nav-link text-white"><i class="fa fa-home"></i> Home</a>
+        <a href="cart.html" class="nav-link text-white ms-3 position-relative">
+          <i class="fa fa-shopping-cart"></i> Cart
+          <span id="cartBadge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="display: none;">
+            0
+          </span>
+        </a>
+      </div>
+    </div>
+  </nav>
+  <div class="container my-5">
+    <div class="row">
+      <div class="col-md-3">
+        <div class="list-group">
+  <a href="#profileSection" class="list-group-item list-group-item-action active" data-bs-toggle="list">
+    <i class="fa fa-user me-2"></i> My Profile
+  </a>
+  <a href="#ordersSection" class="list-group-item list-group-item-action" data-bs-toggle="list">
+    <i class="fa fa-box me-2"></i> My Orders
+  </a>
+  <a href="#settingsSection" class="list-group-item list-group-item-action" data-bs-toggle="list">
+    <i class="fa fa-cog me-2"></i> Settings
+  </a>
+  <button id="logoutProfileBtn" class="list-group-item list-group-item-action text-danger">
+    <i class="fa fa-sign-out me-2"></i> Logout
+  </button>
+</div>
+      </div>
+      <div class="col-md-9">
+        <div id="profileSection" class="mb-5">
+          <h2 class="mb-4">My Profile</h2>
+          <div class="card">
+            <div class="card-body">
+              <div class="row mb-3">
+                <div class="col-md-2 text-center">
+                  <i class="fa fa-user-circle fa-5x text-danger"></i>
+                </div>
+                <div class="col-md-10">
+                  <h4 id="profileName">Loading...</h4>
+                  <p class="text-muted" id="profileEmail">Loading...</p>
+                  <small class="text-muted">Member since <span id="profileDate">Loading...</span></small>
+                </div>
+              </div>
+              <hr>
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label class="form-label fw-bold">Full Name</label>
+                  <p id="displayName" class="form-control-plaintext">Loading...</p>
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label class="form-label fw-bold">Email</label>
+                  <p id="displayEmail" class="form-control-plaintext">Loading...</p>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label class="form-label fw-bold">Phone</label>
+                  <p id="displayPhone" class="form-control-plaintext">Loading...</p>
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label class="form-label fw-bold">Address</label>
+                  <p id="displayAddress" class="form-control-plaintext">Loading...</p>
+                </div>
+              </div>
+              <button id="editProfileBtn" class="btn btn-danger">
+                <i class="fa fa-edit me-2"></i> Edit Profile
+              </button>
+            </div>
+          </div>
+        </div>
+        <div id="editProfileSection" class="mb-5" style="display:none;">
+          <h2 class="mb-4">Edit Profile</h2>
+          <div class="card">
+            <div class="card-body">
+              <form id="editProfileForm">
+                <div class="row mb-3">
+                  <div class="col-md-6">
+                    <label class="form-label">Full Name</label>
+                    <input type="text" class="form-control" id="editName" required>
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label">Email <small class="text-muted">(Cannot be changed)</small></label>
+                    <input type="email" class="form-control" id="editEmail" disabled>
+                  </div>
+                </div>
+                <div class="row mb-3">
+                  <div class="col-md-6">
+                    <label class="form-label">Phone</label>
+                    <input type="tel" class="form-control" id="editPhone">
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label">Address</label>
+                    <input type="text" class="form-control" id="editAddress">
+                  </div>
+                </div>
+                <div class="row mb-3">
+                  <div class="col-md-6">
+                    <label class="form-label">New Password <small class="text-muted">(Leave blank to keep current)</small></label>
+                    <input type="password" class="form-control" id="editPassword" placeholder="Enter new password">
+                  </div>
+                </div>
+                <div class="alert alert-success" id="editSuccess" style="display:none;">
+                  <i class="fa fa-check-circle me-2"></i> Profile updated successfully!
+                </div>
+                <div class="alert alert-danger" id="editError" style="display:none;"></div>
+                <button type="submit" class="btn btn-danger">
+                  <i class="fa fa-save me-2"></i> Save Changes
+                </button>
+                <button type="button" class="btn btn-secondary ms-2" id="cancelEditBtn">Cancel</button>
+              </form>
+            </div>
+          </div>
+        </div>
+		
+		<!-- My Orders Section -->
+        <div id="ordersSection" class="mb-5" style="display:none;">
+          <h2 class="mb-4">My Orders</h2>
+          
+          <div id="ordersLoading" class="text-center py-5">
+            <div class="spinner-border text-danger" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+            <p class="mt-3">Loading your orders...</p>
+          </div>
+          
+          <div id="noOrders" class="alert alert-info" style="display:none;">
+            <i class="fa fa-info-circle me-2"></i>
+            You haven't placed any orders yet. <a href="index.html" class="alert-link">Start shopping!</a>
+          </div>
+          
+          <div id="ordersList"></div>
+        </div>
+
+        <div id="settingsSection" class="mb-5" style="display:none;">
+		
+        <div id="settingsSection" class="mb-5" style="display:none;">
+          <h2 class="mb-4">Account Settings</h2>
+          <div class="card">
+            <div class="card-body">
+              <h5>Danger Zone</h5>
+              <p class="text-muted">Once you delete your account, there is no going back. Please be certain.</p>
+              <button id="deleteAccountBtn" class="btn btn-outline-danger">
+                <i class="fa fa-trash me-2"></i> Delete Account
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Review Modal -->
+  <div class="modal fade" id="reviewModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header bg-danger text-white">
+          <h5 class="modal-title">Leave a Review</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <form id="reviewForm">
+            <input type="hidden" id="reviewProductId">
+            <input type="hidden" id="reviewOrderId">
+            
+            <div class="mb-3">
+              <label class="form-label">Product</label>
+              <input type="text" class="form-control" id="reviewProductName" readonly>
+            </div>
+            
+            <div class="mb-3">
+              <label class="form-label">Rating</label>
+              <div class="rating-stars" id="ratingStars">
+                <i class="fa fa-star star" data-rating="1"></i>
+                <i class="fa fa-star star" data-rating="2"></i>
+                <i class="fa fa-star star" data-rating="3"></i>
+                <i class="fa fa-star star" data-rating="4"></i>
+                <i class="fa fa-star star" data-rating="5"></i>
+              </div>
+              <input type="hidden" id="reviewRating" required>
+              <small class="text-muted d-block mt-2">Click to rate (1-5 stars)</small>
+            </div>
+            
+            <div class="mb-3">
+              <label class="form-label">Your Review</label>
+              <textarea class="form-control" id="reviewComment" rows="4" required placeholder="Share your experience with this product..."></textarea>
+            </div>
+            
+            <button type="submit" class="btn btn-danger w-100">
+              <i class="fa fa-paper-plane"></i> Submit Review
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <style>
+    .rating-stars {
+      font-size: 32px;
+      cursor: pointer;
+    }
+    .rating-stars .star {
+      color: #ddd;
+      transition: color 0.2s;
+    }
+    .rating-stars .star.active {
+      color: #ffc107;
+    }
+    .rating-stars .star:hover,
+    .rating-stars .star:hover ~ .star {
+      color: #ffc107;
+    }
+  </style>
+  
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    const API_URL = 'http://localhost:3000/api';
+    $('[data-bs-toggle="list"]').on('click', function(e) {
+  e.preventDefault();
+  $('#profileSection, #editProfileSection, #ordersSection, #settingsSection').hide();
+      $('[data-bs-toggle="list"]').removeClass('active');
+      $(this).addClass('active');
+      const target = $(this).attr('href');
+      $(target).show();
+    });
+    const customer = JSON.parse(sessionStorage.getItem('customer') || 'null');
+    if (!customer) {
+      alert('Please login first');
+      window.location.href = 'index.html';
+    } else {
+      loadCustomerProfile();
+    }
+    async function loadCustomerProfile() {
+  try {
+    const response = await fetch(`${API_URL}/customers/${customer.id}`);
+
+    // ⚠️ CRITICAL FIX: Check if the response status is OK (200-299)
+    if (!response.ok) {
+        // If the backend returns 404 or 401, throw an error to catch below
+        console.error('API responded with error status:', response.status);
+        // We throw a generic error to show the alert message.
+        throw new Error('Failed to load profile (Status: ' + response.status + ')');
+    }
+
+    const profile = await response.json();
+
+    // Populate the profile fields
+    $('#profileName').text(profile.name);
+    $('#profileEmail').text(profile.email);
+    $('#profileDate').text(new Date(profile.created_at).toLocaleDateString());
+    $('#displayName').text(profile.name);
+    $('#displayEmail').text(profile.email);
+    $('#displayPhone').text(profile.phone || 'Not provided');
+    $('#displayAddress').text(profile.address || 'Not provided');
+
+    // Populate the Edit Profile form
+    $('#editName').val(profile.name);
+    $('#editEmail').val(profile.email);
+    $('#editPhone').val(profile.phone || '');
+    $('#editAddress').val(profile.address || '');
+
+  } catch (error) {
+    // This catch block will now catch both network errors AND non-OK HTTP status codes.
+    console.error('Error loading profile:', error);
+    alert('Error loading profile. Please make sure you are logged in. (API Failure)');
+  }
+}
+    $('#editProfileBtn').on('click', function() {
+      $('#profileSection').hide();
+      $('#editProfileSection').show();
+    });
+    $('#cancelEditBtn').on('click', function() {
+      $('#editProfileSection').hide();
+      $('#profileSection').show();
+      $('#editSuccess').hide();
+      $('#editError').hide();
+    });
+    $('#editProfileForm').submit(async function(e) {
+      e.preventDefault();
+      const updateData = {
+        name: $('#editName').val(),
+        phone: $('#editPhone').val(),
+        address: $('#editAddress').val()
+      };
+      if ($('#editPassword').val()) {
+        updateData.password = $('#editPassword').val();
+      }
+      try {
+        const response = await fetch(`${API_URL}/customers/${customer.id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(updateData)
+        });
+        if (response.ok) {
+          $('#editSuccess').show();
+          $('#editError').hide();
+          customer.name = updateData.name;
+          customer.phone = updateData.phone;
+          customer.address = updateData.address;
+          sessionStorage.setItem('customer', JSON.stringify(customer));
+          setTimeout(() => {
+            loadCustomerProfile();
+            $('#editProfileSection').hide();
+            $('#profileSection').show();
+            $('#editSuccess').hide();
+          }, 1500);
+        } else {
+          const error = await response.json();
+          $('#editError').text(error.error || 'Error updating profile').show();
+          $('#editSuccess').hide();
+        }
+      } catch (error) {
+        console.error('Error updating profile:', error);
+        $('#editError').text('Error updating profile').show();
+        $('#editSuccess').hide();
+      }
+    });
+    $('#logoutProfileBtn').on('click', function() {
+      if (confirm('Are you sure you want to logout?')) {
+        sessionStorage.removeItem('customer');
+        window.location.href = 'index.html';
+      }
+    });
+    $('#deleteAccountBtn').on('click', async function() {
+      if (!confirm('Are you sure? This will delete your account and all associated data.')) {
+        return;
+      }
+      if (!confirm('This action cannot be undone. Delete account?')) {
+        return;
+      }
+      try {
+        const response = await fetch(`${API_URL}/customers/${customer.id}`, {
+          method: 'DELETE'
+        });
+        if (response.ok) {
+          alert('Account deleted successfully');
+          sessionStorage.removeItem('customer');
+          window.location.href = 'index.html';
+        } else {
+          alert('Error deleting account');
+        }
+      } catch (error) {
+        console.error('Error deleting account:', error);
+        alert('Error deleting account');
+      }
+    });
+	
+	// Load customer orders
+    async function loadCustomerOrders() {
+      $('#ordersLoading').show();
+      $('#noOrders').hide();
+      $('#ordersList').empty();
+      
+      try {
+        const response = await fetch(`${API_URL}/customers/${customer.id}/orders`);
+        const orders = await response.json();
+        
+        $('#ordersLoading').hide();
+        
+        if (orders.length === 0) {
+          $('#noOrders').show();
+          return;
+        }
+        
+        let ordersHTML = '';
+        
+        // Get existing reviews to check what's already reviewed
+        const reviewsResponse = await fetch(`${API_URL}/reviews`);
+        const allReviews = await reviewsResponse.json();
+        
+        for (const order of orders) {
+          const orderDate = new Date(order.created_at).toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+          });
+          
+          const statusColor = {
+            'Pending': 'warning',
+            'Processing': 'info',
+            'Shipped': 'primary',
+            'Delivered': 'success',
+            'Received': 'success',
+            'Cancelled': 'danger'
+          }[order.status] || 'secondary';
+          
+          const canMarkReceived = order.status === 'Delivered' || order.status === 'Shipped';
+          const canReview = order.status === 'Delivered' || order.status === 'Received';
+          
+          // Get order items to show review buttons
+          let itemsHTML = '';
+          if (canReview) {
+            try {
+              const itemsResponse = await fetch(`${API_URL}/orders/${order.id}/items`);
+              const items = await itemsResponse.json();
+              
+              itemsHTML = '<div class="mt-3"><h6>Products:</h6>';
+              items.forEach(item => {
+                // Check if this product was already reviewed by this customer
+                const alreadyReviewed = allReviews.some(review => 
+                  review.product_id === item.product_id && 
+                  review.customer_id === customer.id
+                );
+                
+                itemsHTML += `
+                  <div class="d-flex justify-content-between align-items-center mb-2 p-2 border rounded">
+                    <div>
+                      <strong>${item.product_name}</strong>
+                      <small class="text-muted d-block">Qty: ${item.quantity} × ₱${parseFloat(item.price).toFixed(2)}</small>
+                    </div>
+                    ${alreadyReviewed ? 
+                      '<span class="badge bg-success"><i class="fa fa-check"></i> Reviewed</span>' :
+                      `<button class="btn btn-sm btn-outline-primary leave-review-btn" 
+                              data-product-id="${item.product_id}" 
+                              data-product-name="${item.product_name}"
+                              data-order-id="${order.id}">
+                        <i class="fa fa-star"></i> Leave Review
+                      </button>`
+                    }
+                  </div>
+                `;
+              });
+              itemsHTML += '</div>';
+            } catch (error) {
+              console.error('Error loading order items:', error);
+            }
+          }
+          
+          ordersHTML += `
+            <div class="card mb-3 order-card">
+              <div class="card-header d-flex justify-content-between align-items-center">
+                <div>
+                  <h5 class="mb-0">Order #${order.id}</h5>
+                  <small class="text-muted">${orderDate}</small>
+                </div>
+                <span class="badge bg-${statusColor} fs-6">${order.status}</span>
+              </div>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-8">
+                    <h6>Order Details</h6>
+                    <p class="mb-1"><strong>Total:</strong> ₱${parseFloat(order.total_amount).toFixed(2)}</p>
+                    <p class="mb-1"><strong>Payment:</strong> ${order.payment_method}</p>
+                    <p class="mb-1"><strong>Delivery Address:</strong> ${order.customer_address}</p>
+                    ${itemsHTML}
+                  </div>
+                   <div class="col-md-4 text-end">
+              ${canMarkReceived ? `
+                <button class="btn btn-success mark-received-btn" data-order-id="${order.id}">
+                  <i class="fa fa-check-circle me-2"></i>I Received My Order
+                </button>
+              ` : ''}
+              ${order.status === 'Received' ? `
+                <div class="alert alert-success mb-0">
+                  <i class="fa fa-check-circle me-2"></i>
+                  <strong>Order Received!</strong>
+                </div>
+              ` : ''}
+              ${(order.status === 'Pending' || order.status === 'Processing') ? `
+                <button class="btn btn-danger cancel-order-btn" 
+                        data-order-id="${order.id}" 
+                        data-order-number="${order.id}">
+                  <i class="fa fa-times"></i> Cancel Order
+                </button>
+              ` : ''}
+              ${order.status === 'Cancelled' ? `
+                <div class="alert alert-secondary mb-0">
+                  <i class="fa fa-ban me-2"></i>
+                  <strong>Order Cancelled</strong>
+                      </div>
+                    ` : ''}
+                  </div>
+                </div>
+              </div>
+            </div>
+          `;
+        }
+        
+        $('#ordersList').html(ordersHTML);
+        
+      } catch (error) {
+        console.error('Error loading orders:', error);
+        $('#ordersLoading').hide();
+        $('#ordersList').html(`
+          <div class="alert alert-danger">
+            <i class="fa fa-exclamation-circle me-2"></i>
+            Error loading orders. Please try again later.
+          </div>
+        `);
+      }
+    }
+
+    // Mark order as received
+    $(document).on('click', '.mark-received-btn', async function() {
+      const orderId = $(this).data('order-id');
+      const button = $(this);
+      
+      if (!confirm('Confirm that you have received this order?')) {
+        return;
+      }
+      
+      button.prop('disabled', true).html('<span class="spinner-border spinner-border-sm me-2"></span>Processing...');
+      
+      try {
+        const response = await fetch(`${API_URL}/orders/${orderId}/received`, {
+          method: 'PUT'
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+          // Show success message
+          const card = button.closest('.order-card');
+          card.find('.badge').removeClass('bg-info bg-primary').addClass('bg-success').text('Received');
+          
+          button.closest('.col-md-4').html(`
+            <div class="alert alert-success mb-0">
+              <i class="fa fa-check-circle me-2"></i>
+              <strong>Thank You!</strong><br>
+              <small>${result.message}</small>
+            </div>
+          `);
+          
+          // Show alert
+          alert('Thank you for confirming! We hope you enjoy your purchase.');
+          
+        } else {
+          alert('Error updating order status');
+          button.prop('disabled', false).html('<i class="fa fa-check-circle me-2"></i>I Received My Order');
+        }
+        
+      } catch (error) {
+        console.error('Error marking order as received:', error);
+        alert('Error updating order status');
+        button.prop('disabled', false).html('<i class="fa fa-check-circle me-2"></i>I Received My Order');
+      }
+    });
+	
+
+// ========================================
+// REVIEW SYSTEM - COMPLETE FUNCTIONALITY
+// ========================================
+
+// Handle "Leave Review" button clicks
+$(document).on('click', '.leave-review-btn', function() {
+  const productId = $(this).data('product-id');
+  const productName = $(this).data('product-name');
+  const orderId = $(this).data('order-id');
+  
+  // Set values in modal
+  $('#reviewProductId').val(productId);
+  $('#reviewProductName').val(productName);
+  $('#reviewOrderId').val(orderId);
+  $('#reviewRating').val('');
+  $('#reviewComment').val('');
+  
+  // Reset stars
+  $('.star').removeClass('active');
+  
+  // Show modal
+  const modal = new bootstrap.Modal(document.getElementById('reviewModal'));
+  modal.show();
+});
+
+// Star rating click handler
+$(document).on('click', '.star', function() {
+  const rating = $(this).data('rating');
+  $('#reviewRating').val(rating);
+  
+  // Update star display
+  $('.star').removeClass('active');
+  for (let i = 1; i <= rating; i++) {
+    $(`.star[data-rating="${i}"]`).addClass('active');
+  }
+});
+
+// Submit review form
+$('#reviewForm').submit(async function(e) {
+  e.preventDefault();
+  
+  const productId = $('#reviewProductId').val();
+  const rating = $('#reviewRating').val();
+  const comment = $('#reviewComment').val().trim();
+  
+  // Validate
+  if (!rating) {
+    alert('Please select a star rating');
+    return;
+  }
+  
+  if (!comment) {
+    alert('Please write a review comment');
+    return;
+  }
+  
+  const customer = JSON.parse(sessionStorage.getItem('customer'));
+  
+  const reviewData = {
+    product_id: parseInt(productId),
+    customer_id: customer.id,
+    customer_name: customer.name,
+    rating: parseInt(rating),
+    comment: comment
+  };
+  
+  try {
+    const response = await fetch(`${API_URL}/reviews`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(reviewData)
+    });
+    
+    const result = await response.json();
+    
+    if (response.ok && result.success) {
+      alert('✓ Review submitted successfully! Thank you for your feedback!');
+      
+      // Close modal
+      const modal = bootstrap.Modal.getInstance(document.getElementById('reviewModal'));
+      modal.hide();
+      
+      // Reset form
+      $('#reviewForm')[0].reset();
+      $('.star').removeClass('active');
+      
+      // Reload orders to show "Reviewed" badge
+      loadCustomerOrders();
+    } else {
+      alert('Error submitting review: ' + (result.error || 'Please try again'));
+    }
+  } catch (error) {
+    console.error('Error submitting review:', error);
+    alert('Error submitting review. Please try again.');
+  }
+});
+
+	// Handle cancel order button clicks
+  $(document).on('click', '.cancel-order-btn', async function() {
+    const orderId = $(this).data('order-id');
+    const orderNumber = $(this).data('order-number');
+    
+    // Confirm cancellation
+    if (!confirm(`Are you sure you want to cancel Order #${orderNumber}?\n\nThis action cannot be undone.`)) {
+      return;
+    }
+    
+    const customer = JSON.parse(sessionStorage.getItem('customer'));
+    
+    if (!customer) {
+      alert('Please login to cancel orders');
+      return;
+    }
+    
+    const button = $(this);
+    
+    try {
+      // Disable button during request
+      button.prop('disabled', true).html('<span class="spinner-border spinner-border-sm me-2"></span>Cancelling...');
+      
+      const response = await fetch(`${API_URL}/orders/${orderId}/cancel`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          customer_id: customer.id
+        })
+      });
+      
+      const result = await response.json();
+      
+      if (response.ok && result.success) {
+        // Show success message
+        alert(`✓ Order #${orderNumber} has been cancelled successfully`);
+        
+        // Reload orders to show updated status
+        loadCustomerOrders();
+      } else {
+        // Show error message
+        alert(result.error || 'Failed to cancel order');
+        
+        // Re-enable button
+        button.prop('disabled', false).html('<i class="fa fa-times"></i> Cancel Order');
+      }
+    } catch (error) {
+      console.error('Error cancelling order:', error);
+      alert('Error cancelling order. Please try again.');
+      
+      // Re-enable button
+      button.prop('disabled', false).html('<i class="fa fa-times"></i> Cancel Order');
+    }
+  });
+
+    // Load orders when "My Orders" tab is clicked
+    $('a[href="#ordersSection"]').on('click', function() {
+      loadCustomerOrders();
+    });
+  </script>
+  <style>
+    .order-card {
+      border-left: 4px solid #dc3545;
+      transition: box-shadow 0.3s ease;
+    }
+
+    .order-card:hover {
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    .mark-received-btn {
+      white-space: nowrap;
+    }
+
+    #ordersSection .spinner-border {
+      width: 3rem;
+      height: 3rem;
+    }
+  </style>
+</body>
+</html>

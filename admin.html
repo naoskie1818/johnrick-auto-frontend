@@ -1,0 +1,1199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard - Johnrick Auto Supply</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+<nav class="navbar navbar-dark bg-dark">
+  <div class="container d-flex justify-content-between align-items-center">
+    <a class="navbar-brand" href="index.html">
+      <span style="color:#ff0000;">JOHNRICK</span> AUTO SUPPLY - Admin
+    </a>
+    <div class="d-flex align-items-center">
+      <span class="text-white me-3">
+        <i class="fa fa-user-shield"></i> <span id="adminUsername">Admin</span>
+      </span>
+      <a href="cart.html" class="nav-link text-white me-3 position-relative">
+        <i class="fa fa-shopping-cart"></i> Cart
+        <span id="cartBadge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="display: none;">
+          0
+        </span>
+      </a>
+      <a href="index.html" class="btn btn-sm btn-outline-light me-2">Back to Store</a>
+      <button class="btn btn-sm btn-danger" id="adminLogoutBtn">
+        <i class="fa fa-sign-out-alt"></i> Logout
+      </button>
+    </div>
+  </div>
+</nav>
+
+<div class="container my-5">
+  
+  <!-- Tabs Navigation -->
+  <ul class="nav nav-tabs mb-4" id="adminTabs" role="tablist">
+    <li class="nav-item" role="presentation">
+      <button class="nav-link active" id="products-tab" data-bs-toggle="tab" data-bs-target="#products" type="button" role="tab">Products</button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" id="categories-tab" data-bs-toggle="tab" data-bs-target="#categories" type="button" role="tab">Categories</button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" id="orders-tab" data-bs-toggle="tab" data-bs-target="#orders" type="button" role="tab">Orders</button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" id="customers-tab" data-bs-toggle="tab" data-bs-target="#customers" type="button" role="tab">Customers</button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" id="reviews-tab" data-bs-toggle="tab" data-bs-target="#reviews" type="button" role="tab">Reviews</button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" id="sales-tab" data-bs-toggle="tab" data-bs-target="#sales" type="button" role="tab">Sales Dashboard</button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" id="admin-users-tab" data-bs-toggle="tab" data-bs-target="#admin-users" type="button" role="tab">Admin Accounts</button>
+    </li>
+  </ul>
+
+  <!-- Tab Content -->
+  <div class="tab-content">
+    
+    <!-- PRODUCTS TAB -->
+    <div id="products" class="tab-pane fade show active" role="tabpanel">
+      <h2>Product Management</h2>
+      
+      <!-- Add Product Form -->
+      <div class="card mb-4">
+        <div class="card-header bg-danger text-white">
+          <h5>Add New Product</h5>
+        </div>
+        <div class="card-body">
+          <form id="productForm">
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <label class="form-label">Product Name</label>
+                <input type="text" class="form-control" id="pname" required>
+              </div>
+              <div class="col-md-3">
+                <label class="form-label">Price</label>
+                <input type="number" class="form-control" id="pprice" required>
+              </div>
+              <div class="col-md-3">
+                <label class="form-label">Stock</label>
+                <input type="number" class="form-control" id="pstock" required>
+              </div>
+            </div>
+            <div class="row mb-3">
+              <div class="col-md-8">
+                <label class="form-label">Image URL</label>
+                <input type="text" class="form-control" id="pimage" required>
+              </div>
+              <div class="mb-3">
+          <label for="productCategory" class="form-label">Category</label>
+          <select class="form-select" id="productCategory" required>
+            <option value="">Select Category</option>
+          </select>
+        </div>
+        
+        <!-- Manufacturers Multi-Select -->
+        <div class="mb-3">
+          <label class="form-label">Compatible Car Manufacturers</label>
+          <div id="manufacturerCheckboxes" class="border rounded p-3" style="max-height: 200px; overflow-y: auto;">
+            <!-- Checkboxes will be loaded here -->
+          </div>
+          <small class="text-muted">Select all car brands this product is compatible with</small>
+        </div>
+            </div>
+            <button type="submit" class="btn btn-danger">Add Product</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Products List -->
+      <div class="card">
+        <div class="card-header bg-dark text-white">
+          <h5>Current Products</h5>
+        </div>
+        <div class="card-body">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Category</th>
+                <th>Price</th>
+                <th>Stock</th>
+                <th>Image</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="adminProductList"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- CATEGORIES TAB -->
+    <div id="categories" class="tab-pane fade" role="tabpanel">
+      <h2>Category Management</h2>
+      
+      <!-- Add Category Form -->
+      <div class="card mb-4">
+        <div class="card-header bg-danger text-white">
+          <h5>Add New Category</h5>
+        </div>
+        <div class="card-body">
+          <form id="categoryForm">
+            <div class="row mb-3">
+              <div class="col-md-8">
+                <label class="form-label">Category Name</label>
+                <input type="text" class="form-control" id="catname" placeholder="e.g., Engine Parts, Tires, Accessories" required>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">&nbsp;</label>
+                <button type="submit" class="btn btn-danger w-100">Add Category</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Categories List -->
+      <div class="card">
+        <div class="card-header bg-dark text-white">
+          <h5>Current Categories</h5>
+        </div>
+        <div class="card-body">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Category Name</th>
+                <th>Product Count</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="adminCategoryList"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- CUSTOMERS TAB -->
+    <div id="customers" class="tab-pane fade" role="tabpanel">
+      <h2>Customer Management</h2>
+      
+      <!-- Manual Load Button -->
+      <div class="alert alert-info">
+        <button class="btn btn-primary" onclick="loadAdminCustomers()">
+          <i class="fa fa-refresh"></i> Load Customers
+        </button>
+        <small class="ms-3">Click to load customer data</small>
+      </div>
+      
+      <!-- Customers List -->
+      <div class="card">
+        <div class="card-header bg-dark text-white">
+          <h5>Registered Customers</h5>
+        </div>
+        <div class="card-body">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Address</th>
+                <th>Registered</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="adminCustomerList">
+              <tr>
+                <td colspan="7" class="text-center text-muted">
+                  Click "Load Customers" button above
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+	
+	<!-- ORDERS TAB -->
+    <div id="orders" class="tab-pane fade" role="tabpanel">
+      <h2>Order Management</h2>
+      
+      <!-- Filter Orders -->
+      <div class="card mb-4">
+        <div class="card-header bg-danger text-white">
+          <h5>Filter Orders</h5>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-3">
+              <select class="form-select" id="filterStatus">
+                <option value="">All Statuses</option>
+                <option value="Pending">Pending</option>
+                <option value="Processing">Processing</option>
+                <option value="Shipped">Shipped</option>
+                <option value="Delivered">Delivered</option>
+                <option value="Received">Received</option>
+                <option value="Cancelled">Cancelled</option>
+              </select>
+            </div>
+            <div class="col-md-3">
+              <button class="btn btn-primary" onclick="loadAdminOrders()">
+                <i class="fa fa-refresh"></i> Refresh Orders
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Orders List -->
+      <div class="card">
+        <div class="card-header bg-dark text-white">
+          <h5>All Orders</h5>
+        </div>
+        <div class="card-body">
+          <div id="ordersLoading" class="text-center py-5" style="display:none;">
+            <div class="spinner-border text-danger" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+            <p class="mt-3">Loading orders...</p>
+          </div>
+          
+          <div id="noOrders" class="alert alert-info" style="display:none;">
+            <i class="fa fa-info-circle me-2"></i>
+            No orders found.
+          </div>
+          
+          <div id="adminOrdersList"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- REVIEWS TAB -->
+    <div id="reviews" class="tab-pane fade" role="tabpanel">
+      <h2>Reviews Management</h2>
+      
+      <div class="card">
+        <div class="card-header bg-danger text-white d-flex justify-content-between align-items-center">
+          <h5 class="mb-0">Customer Reviews</h5>
+          <button class="btn btn-sm btn-light" onclick="loadReviews()">
+            <i class="fa fa-refresh"></i> Refresh
+          </button>
+        </div>
+        <div class="card-body">
+          <div id="reviewsLoading" class="text-center py-5">
+            <div class="spinner-border text-danger"></div>
+            <p class="mt-2">Loading reviews...</p>
+          </div>
+          <div id="reviewsList" style="display: none;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SALES DASHBOARD TAB -->
+    <div id="sales" class="tab-pane fade" role="tabpanel">
+      <h2>Sales Dashboard</h2>
+      
+      <!-- Sales Summary Cards -->
+      <div class="row mb-4">
+        <div class="col-md-4">
+          <div class="card bg-primary text-white">
+            <div class="card-body">
+              <h5 class="card-title">Today's Sales</h5>
+              <h2 id="salesToday" class="mb-0">₱0.00</h2>
+              <small id="orderCountToday">0 orders</small>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card bg-success text-white">
+            <div class="card-body">
+              <h5 class="card-title">This Month</h5>
+              <h2 id="salesMonth" class="mb-0">₱0.00</h2>
+              <small id="orderCountMonth">0 orders</small>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card bg-danger text-white">
+            <div class="card-body">
+              <h5 class="card-title">All Time</h5>
+              <h2 id="salesAllTime" class="mb-0">₱0.00</h2>
+              <small id="orderCountAllTime">0 orders</small>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Sales Chart -->
+      <div class="card mb-4">
+        <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+          <h5 class="mb-0">Sales Overview</h5>
+          <button class="btn btn-sm btn-light" onclick="loadSalesData()">
+            <i class="fa fa-refresh"></i> Refresh
+          </button>
+        </div>
+        <div class="card-body">
+          <canvas id="salesChart" height="80"></canvas>
+        </div>
+      </div>
+      
+      <!-- Top Products -->
+      <div class="card">
+        <div class="card-header bg-danger text-white">
+          <h5 class="mb-0">Top Selling Products</h5>
+        </div>
+        <div class="card-body">
+          <div id="topProductsLoading" class="text-center py-3">
+            <div class="spinner-border text-danger"></div>
+          </div>
+          <div id="topProductsList" style="display: none;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ADMIN ACCOUNTS TAB -->
+    <div id="admin-users" class="tab-pane fade" role="tabpanel">
+      <h2>Admin Account Management</h2>
+      
+      <!-- Create Admin Form -->
+      <div class="card mb-4">
+        <div class="card-header bg-danger text-white">
+          <h5 class="mb-0">Create New Admin Account</h5>
+        </div>
+        <div class="card-body">
+          <form id="createAdminForm">
+            <div class="row">
+              <div class="col-md-4 mb-3">
+                <label class="form-label">Username <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" id="newAdminUsername" required>
+              </div>
+              <div class="col-md-4 mb-3">
+                <label class="form-label">Password <span class="text-danger">*</span></label>
+                <input type="password" class="form-control" id="newAdminPassword" required>
+              </div>
+              <div class="col-md-4 mb-3">
+                <label class="form-label">Role <span class="text-danger">*</span></label>
+                <select class="form-select" id="newAdminRole" required>
+                  <option value="">Select Role</option>
+                  <option value="CEO">CEO (Chief Executive Officer)</option>
+                  <option value="Manager">Manager</option>
+                  <option value="Staff">Staff</option>
+                  <option value="Admin">Admin</option>
+                </select>
+              </div>
+            </div>
+            <button type="submit" class="btn btn-danger">
+              <i class="fa fa-plus"></i> Create Admin Account
+            </button>
+          </form>
+        </div>
+      </div>
+      
+      <!-- Admin Accounts List -->
+      <div class="card">
+        <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+          <h5 class="mb-0">Admin Accounts</h5>
+          <button class="btn btn-sm btn-light" onclick="loadAdminAccounts()">
+            <i class="fa fa-refresh"></i> Refresh
+          </button>
+        </div>
+        <div class="card-body">
+          <div id="adminAccountsLoading" class="text-center py-5">
+            <div class="spinner-border text-danger"></div>
+            <p class="mt-2">Loading admin accounts...</p>
+          </div>
+          <div id="adminAccountsList" style="display: none;"></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+  </div>
+</div>
+
+<!-- Edit Product Modal -->
+<div class="modal fade" id="editProductModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header bg-danger text-white">
+        <h5 class="modal-title">Edit Product</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <form id="editProductForm">
+          <input type="hidden" id="editProductId">
+          <div class="mb-3">
+            <label class="form-label">Product Name</label>
+            <input type="text" class="form-control" id="editPname" required>
+          </div>
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label class="form-label">Price</label>
+              <input type="number" class="form-control" id="editPprice" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Stock</label>
+              <input type="number" class="form-control" id="editPstock" required>
+            </div>
+          </div>
+          <div class="mb-3">
+          <label for="editProductCategory" class="form-label">Category</label>
+          <select class="form-select" id="editProductCategory" required>
+            <option value="">Select Category</option>
+          </select>
+        </div>
+        
+        <!-- Manufacturers Multi-Select -->
+        <div class="mb-3">
+          <label class="form-label">Compatible Car Manufacturers</label>
+          <div id="editManufacturerCheckboxes" class="border rounded p-3" style="max-height: 200px; overflow-y: auto;">
+            <!-- Checkboxes will be loaded here -->
+          </div>
+          <small class="text-muted">Select all car brands this product is compatible with</small>
+        </div>
+          <div class="mb-3">
+            <label class="form-label">Image URL</label>
+            <input type="text" class="form-control" id="editPimage" required>
+          </div>
+          <button type="submit" class="btn btn-danger">Update Product</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="js.js"></script>
+<script>
+
+// Load admin orders
+async function loadAdminOrders() {
+  $('#ordersLoading').show();
+  $('#noOrders').hide();
+  $('#adminOrdersList').empty();
+  
+  const statusFilter = $('#filterStatus').val();
+  
+  console.log('Loading orders with filter:', statusFilter); // Debug log
+  
+  const url = statusFilter 
+    ? `${API_URL}/orders?status=${statusFilter}`
+    : `${API_URL}/orders`;
+  
+  console.log('Fetching from:', url); // Debug log
+  
+  try {
+    const response = await fetch(url);
+    const orders = await response.json();
+    
+    console.log('Received orders:', orders.length); // Debug log
+    
+    $('#ordersLoading').hide();
+    
+    if (orders.length === 0) {
+      $('#noOrders').show();
+      return;
+    }
+    
+    let ordersHTML = '';
+    
+    orders.forEach(order => {
+      const orderDate = new Date(order.created_at).toLocaleString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+      
+      const statusColors = {
+        'Pending': 'warning',
+        'Processing': 'info',
+        'Shipped': 'primary',
+        'Delivered': 'success',
+        'Received': 'success',
+        'Cancelled': 'danger'
+      };
+      
+      const statusColor = statusColors[order.status] || 'secondary';
+      
+      ordersHTML += `
+        <div class="card mb-3 border-start border-4 border-${statusColor}">
+          <div class="card-header">
+            <div class="row align-items-center">
+              <div class="col-md-3">
+                <h6 class="mb-0">Order #${order.id}</h6>
+                <small class="text-muted">${orderDate}</small>
+              </div>
+              <div class="col-md-3">
+                <strong>Customer:</strong> ${order.customer_name}<br>
+                <small>${order.customer_email}</small>
+              </div>
+              <div class="col-md-2">
+                <strong>Total:</strong><br>
+                ₱${parseFloat(order.total_amount).toFixed(2)}
+              </div>
+              <div class="col-md-2">
+                <span class="badge bg-${statusColor} fs-6">${order.status}</span>
+              </div>
+              <div class="col-md-2 text-end">
+                <button class="btn btn-sm btn-primary" onclick="toggleOrderDetails(${order.id})">
+                  <i class="fa fa-eye"></i> Details
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="card-body collapse" id="orderDetails${order.id}">
+            <div class="row">
+              <div class="col-md-6">
+                <h6>Order Information</h6>
+                <p class="mb-1"><strong>Items:</strong> ${order.items || 'N/A'}</p>
+                <p class="mb-1"><strong>Payment Method:</strong> ${order.payment_method}</p>
+                <p class="mb-1"><strong>Delivery Address:</strong> ${order.customer_address}</p>
+              </div>
+              <div class="col-md-6">
+                <h6>Update Order Status</h6>
+                <div class="input-group mb-3">
+                  <select class="form-select" id="status${order.id}">
+                    <option value="Pending" ${order.status === 'Pending' ? 'selected' : ''}>Pending</option>
+                    <option value="Processing" ${order.status === 'Processing' ? 'selected' : ''}>Processing</option>
+                    <option value="Shipped" ${order.status === 'Shipped' ? 'selected' : ''}>Shipped</option>
+                    <option value="Delivered" ${order.status === 'Delivered' ? 'selected' : ''}>Delivered</option>
+                    <option value="Received" ${order.status === 'Received' ? 'selected' : ''}>Received</option>
+                    <option value="Cancelled" ${order.status === 'Cancelled' ? 'selected' : ''}>Cancelled</option>
+                  </select>
+                  <button class="btn btn-success" onclick="updateOrderStatus(${order.id})">
+                    <i class="fa fa-check"></i> Update
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    });
+    
+    $('#adminOrdersList').html(ordersHTML);
+    
+  } catch (error) {
+    console.error('Error loading orders:', error);
+    $('#ordersLoading').hide();
+    $('#adminOrdersList').html(`
+      <div class="alert alert-danger">
+        <i class="fa fa-exclamation-circle me-2"></i>
+        Error loading orders. Please try again.
+      </div>
+    `);
+  }
+}
+
+// Toggle order details
+function toggleOrderDetails(orderId) {
+  $(`#orderDetails${orderId}`).collapse('toggle');
+}
+
+// Update order status
+async function updateOrderStatus(orderId) {
+  const newStatus = $(`#status${orderId}`).val();
+  
+  if (!confirm(`Update order #${orderId} to "${newStatus}"?`)) {
+    return;
+  }
+  
+  try {
+    const response = await fetch(`${API_URL}/orders/${orderId}/status`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status: newStatus })
+    });
+    
+    const result = await response.json();
+    
+    if (result.success) {
+      alert(`✓ ${result.message}`);
+      loadAdminOrders(); // Reload orders list
+    } else {
+      alert('Error updating order status');
+    }
+  } catch (error) {
+    console.error('Error updating order status:', error);
+    alert('Error updating order status');
+  }
+}
+
+// Load orders when Orders tab is shown
+document.getElementById('orders-tab').addEventListener('shown.bs.tab', function (event) {
+  loadAdminOrders();
+});
+
+// Filter orders when status changes
+$('#filterStatus').on('change', function() {
+  console.log('Filter changed to:', $(this).val()); // Debug
+  loadAdminOrders();
+});
+
+  // Auto-load customers when tab is shown
+  document.getElementById('customers-tab').addEventListener('shown.bs.tab', function (event) {
+    console.log('Customers tab activated');
+    if (typeof loadAdminCustomers === 'function') {
+      loadAdminCustomers();
+    }
+  });
+  
+  // Load manufacturers into checkboxes
+async function loadManufacturerCheckboxes(containerId, selectedIds = []) {
+  try {
+    const response = await fetch(`${API_URL}/manufacturers`);
+    const manufacturers = await response.json();
+    
+    let html = '';
+    manufacturers.forEach(manufacturer => {
+      const isChecked = selectedIds.includes(manufacturer.id) ? 'checked' : '';
+      html += `
+        <div class="form-check">
+          <input class="form-check-input manufacturer-checkbox" 
+                 type="checkbox" 
+                 value="${manufacturer.id}" 
+                 id="${containerId}_${manufacturer.id}"
+                 ${isChecked}>
+          <label class="form-check-label" for="${containerId}_${manufacturer.id}">
+            ${manufacturer.name}
+          </label>
+        </div>
+      `;
+    });
+    
+    $(`#${containerId}`).html(html);
+  } catch (error) {
+    console.error('Error loading manufacturers:', error);
+  }
+}
+
+// Get selected manufacturer IDs from checkboxes
+function getSelectedManufacturers(containerId) {
+  const selected = [];
+  $(`#${containerId} .manufacturer-checkbox:checked`).each(function() {
+    selected.push(parseInt($(this).val()));
+  });
+  return selected;
+}
+
+// Assign manufacturers to product
+async function assignManufacturersToProduct(productId, manufacturerIds) {
+  try {
+    // First, get current manufacturers
+    const currentResponse = await fetch(`${API_URL}/products/${productId}/manufacturers`);
+    const currentManufacturers = await currentResponse.json();
+    const currentIds = currentManufacturers.map(m => m.id);
+    
+    // Remove manufacturers that are no longer selected
+    for (const currentId of currentIds) {
+      if (!manufacturerIds.includes(currentId)) {
+        await fetch(`${API_URL}/products/${productId}/manufacturers/${currentId}`, {
+          method: 'DELETE'
+        });
+      }
+    }
+    
+    // Add new manufacturers
+    for (const manufacturerId of manufacturerIds) {
+      if (!currentIds.includes(manufacturerId)) {
+        await fetch(`${API_URL}/products/${productId}/manufacturers`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ manufacturer_id: manufacturerId })
+        });
+      }
+    }
+    
+    return true;
+  } catch (error) {
+    console.error('Error assigning manufacturers:', error);
+    return false;
+  }
+}
+
+// Load categories into dropdowns
+async function loadCategoryDropdowns() {
+  try {
+    const response = await fetch(`${API_URL}/categories`);
+    const categories = await response.json();
+    
+    // Populate category dropdowns
+    let optionsHTML = '<option value="">Select Category</option>';
+    categories.forEach(category => {
+      optionsHTML += `<option value="${category.id}">${category.name}</option>`;
+    });
+    
+    $('#productCategory').html(optionsHTML);
+    $('#editProductCategory').html(optionsHTML);
+    
+    console.log('✓ Categories loaded:', categories.length);
+  } catch (error) {
+    console.error('Error loading categories:', error);
+  }
+}
+
+// Load categories and manufacturers when page loads
+$(document).ready(function() {
+  console.log('Admin page ready - loading dropdowns');
+  loadCategoryDropdowns();
+  loadManufacturerCheckboxes('manufacturerCheckboxes');
+  
+  // Display admin username
+  const admin = JSON.parse(sessionStorage.getItem('admin'));
+  if (admin) {
+    $('#adminUsername').text(admin.username);
+  }
+  
+  // Check if user is logged in as admin
+  if (!admin) {
+    alert('Please login as admin first');
+    window.location.href = 'index.html';
+  }
+});
+
+// Admin Logout Handler
+$('#adminLogoutBtn').click(function() {
+  if (confirm('Are you sure you want to logout?')) {
+    sessionStorage.removeItem('admin');
+    sessionStorage.removeItem('customer');
+    alert('Logged out successfully');
+    window.location.href = 'index.html';
+  }
+});
+
+// ========================================
+// REVIEWS MANAGEMENT
+// ========================================
+
+// Load all reviews
+async function loadReviews() {
+  $('#reviewsLoading').show();
+  $('#reviewsList').hide();
+  
+  try {
+    const response = await fetch(`${API_URL}/reviews`);
+    const reviews = await response.json();
+    
+    $('#reviewsLoading').hide();
+    $('#reviewsList').show();
+    
+    if (reviews.length === 0) {
+      $('#reviewsList').html(`
+        <div class="text-center text-muted py-4">
+          <i class="fa fa-star-o fa-3x mb-3"></i>
+          <p>No reviews yet</p>
+        </div>
+      `);
+      return;
+    }
+    
+    let html = '<div class="table-responsive"><table class="table table-striped"><thead><tr><th>ID</th><th>Product</th><th>Customer</th><th>Rating</th><th>Comment</th><th>Date</th><th>Action</th></tr></thead><tbody>';
+    
+    reviews.forEach(review => {
+      const stars = '⭐'.repeat(review.rating) + '☆'.repeat(5 - review.rating);
+      const date = new Date(review.created_at).toLocaleDateString();
+      
+      html += `
+        <tr>
+          <td>${review.id}</td>
+          <td>${review.product_name || 'N/A'}</td>
+          <td>${review.customer_name}</td>
+          <td>${stars} (${review.rating}/5)</td>
+          <td>${review.comment || 'No comment'}</td>
+          <td>${date}</td>
+          <td>
+            <button class="btn btn-sm btn-danger" onclick="deleteReview(${review.id})">
+              <i class="fa fa-trash"></i>
+            </button>
+          </td>
+        </tr>
+      `;
+    });
+    
+    html += '</tbody></table></div>';
+    $('#reviewsList').html(html);
+    
+  } catch (error) {
+    console.error('Error loading reviews:', error);
+    $('#reviewsLoading').hide();
+    $('#reviewsList').show().html(`
+      <div class="alert alert-danger">
+        <i class="fa fa-exclamation-circle"></i> Error loading reviews
+      </div>
+    `);
+  }
+}
+
+// Delete review
+async function deleteReview(reviewId) {
+  if (!confirm('Delete this review?')) return;
+  
+  try {
+    const response = await fetch(`${API_URL}/reviews/${reviewId}`, {
+      method: 'DELETE'
+    });
+    
+    const result = await response.json();
+    
+    if (result.success) {
+      alert('Review deleted successfully');
+      loadReviews();
+    } else {
+      alert('Error deleting review');
+    }
+  } catch (error) {
+    console.error('Error deleting review:', error);
+    alert('Error deleting review');
+  }
+}
+
+// Load reviews when Reviews tab is shown
+document.getElementById('reviews-tab').addEventListener('shown.bs.tab', function (event) {
+  loadReviews();
+});
+
+// ========================================
+// SALES DASHBOARD
+// ========================================
+
+let salesChart = null;
+
+// Load sales data
+async function loadSalesData() {
+  try {
+    const response = await fetch(`${API_URL}/orders`);
+    const orders = await response.json();
+    
+    // Calculate sales for different periods
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const thisMonthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+    
+    let salesToday = 0;
+    let salesMonth = 0;
+    let salesAllTime = 0;
+    let orderCountToday = 0;
+    let orderCountMonth = 0;
+    let orderCountAllTime = 0;
+    
+    // Monthly sales for chart (last 6 months)
+    const monthlySales = {};
+    for (let i = 5; i >= 0; i--) {
+      const month = new Date(now.getFullYear(), now.getMonth() - i, 1);
+      const monthKey = month.toLocaleString('default', { month: 'short', year: 'numeric' });
+      monthlySales[monthKey] = 0;
+    }
+    
+    orders.forEach(order => {
+      const orderDate = new Date(order.created_at);
+      const amount = parseFloat(order.total_amount) || 0;
+      
+      // All time
+      salesAllTime += amount;
+      orderCountAllTime++;
+      
+      // This month
+      if (orderDate >= thisMonthStart) {
+        salesMonth += amount;
+        orderCountMonth++;
+      }
+      
+      // Today
+      if (orderDate >= today) {
+        salesToday += amount;
+        orderCountToday++;
+      }
+      
+      // Monthly chart data
+      const orderMonthKey = orderDate.toLocaleString('default', { month: 'short', year: 'numeric' });
+      if (monthlySales.hasOwnProperty(orderMonthKey)) {
+        monthlySales[orderMonthKey] += amount;
+      }
+    });
+    
+    // Update summary cards
+    $('#salesToday').text(`₱${salesToday.toFixed(2)}`);
+    $('#orderCountToday').text(`${orderCountToday} orders`);
+    $('#salesMonth').text(`₱${salesMonth.toFixed(2)}`);
+    $('#orderCountMonth').text(`${orderCountMonth} orders`);
+    $('#salesAllTime').text(`₱${salesAllTime.toFixed(2)}`);
+    $('#orderCountAllTime').text(`${orderCountAllTime} orders`);
+    
+    // Create/update chart
+    const ctx = document.getElementById('salesChart');
+    if (ctx) {
+      if (salesChart) {
+        salesChart.destroy();
+      }
+      
+      salesChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: Object.keys(monthlySales),
+          datasets: [{
+            label: 'Monthly Sales (₱)',
+            data: Object.values(monthlySales),
+            borderColor: '#dc3545',
+            backgroundColor: 'rgba(220, 53, 69, 0.1)',
+            tension: 0.4,
+            fill: true
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: true,
+          plugins: {
+            legend: {
+              display: true,
+              position: 'top'
+            },
+            tooltip: {
+              callbacks: {
+                label: function(context) {
+                  return '₱' + context.parsed.y.toFixed(2);
+                }
+              }
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: {
+                callback: function(value) {
+                  return '₱' + value.toLocaleString();
+                }
+              }
+            }
+          }
+        }
+      });
+    }
+    
+    // Load top products
+    loadTopProducts(orders);
+    
+  } catch (error) {
+    console.error('Error loading sales data:', error);
+    alert('Error loading sales data');
+  }
+}
+
+// Load top selling products
+async function loadTopProducts(orders) {
+  $('#topProductsLoading').show();
+  $('#topProductsList').hide();
+  
+  try {
+    // Get all order items
+    const productSales = {};
+    
+    for (const order of orders) {
+      const itemsResponse = await fetch(`${API_URL}/orders/${order.id}/items`);
+      const items = await itemsResponse.json();
+      
+      items.forEach(item => {
+        if (!productSales[item.product_name]) {
+          productSales[item.product_name] = {
+            name: item.product_name,
+            quantity: 0,
+            revenue: 0
+          };
+        }
+        productSales[item.product_name].quantity += item.quantity;
+        productSales[item.product_name].revenue += item.price * item.quantity;
+      });
+    }
+    
+    // Sort by revenue
+    const topProducts = Object.values(productSales)
+      .sort((a, b) => b.revenue - a.revenue)
+      .slice(0, 5);
+    
+    $('#topProductsLoading').hide();
+    $('#topProductsList').show();
+    
+    if (topProducts.length === 0) {
+      $('#topProductsList').html('<p class="text-muted">No sales data available</p>');
+      return;
+    }
+    
+    let html = '<div class="table-responsive"><table class="table"><thead><tr><th>Rank</th><th>Product</th><th>Units Sold</th><th>Revenue</th></tr></thead><tbody>';
+    
+    topProducts.forEach((product, index) => {
+      const medal = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : `#${index + 1}`;
+      html += `
+        <tr>
+          <td><strong>${medal}</strong></td>
+          <td>${product.name}</td>
+          <td>${product.quantity} units</td>
+          <td class="text-success"><strong>₱${product.revenue.toFixed(2)}</strong></td>
+        </tr>
+      `;
+    });
+    
+    html += '</tbody></table></div>';
+    $('#topProductsList').html(html);
+    
+  } catch (error) {
+    console.error('Error loading top products:', error);
+    $('#topProductsLoading').hide();
+    $('#topProductsList').show().html('<p class="text-danger">Error loading top products</p>');
+  }
+}
+
+// Load sales data when Sales tab is shown
+document.getElementById('sales-tab').addEventListener('shown.bs.tab', function (event) {
+  loadSalesData();
+});
+
+// ========================================
+// ADMIN ACCOUNTS MANAGEMENT
+// ========================================
+
+// Load all admin accounts
+async function loadAdminAccounts() {
+  $('#adminAccountsLoading').show();
+  $('#adminAccountsList').hide();
+  
+  try {
+    const response = await fetch(`${API_URL}/admin/users`);
+    const admins = await response.json();
+    
+    $('#adminAccountsLoading').hide();
+    $('#adminAccountsList').show();
+    
+    if (admins.length === 0) {
+      $('#adminAccountsList').html('<p class="text-muted">No admin accounts found</p>');
+      return;
+    }
+    
+    let html = '<div class="table-responsive"><table class="table table-striped"><thead><tr><th>ID</th><th>Username</th><th>Role</th><th>Actions</th></tr></thead><tbody>';
+    
+    admins.forEach(admin => {
+      const isMainAdmin = admin.id === 1;
+      
+      // Role badge colors
+      const roleBadgeClass = {
+        'CEO': 'bg-primary',
+        'Manager': 'bg-success',
+        'Staff': 'bg-info',
+        'Admin': 'bg-danger',
+        'admin': 'bg-danger' // legacy support
+      }[admin.role] || 'bg-secondary';
+      
+      html += `
+        <tr>
+          <td>${admin.id}</td>
+          <td><strong>${admin.username}</strong></td>
+          <td><span class="badge ${roleBadgeClass}">${admin.role}</span></td>
+          <td>
+            ${isMainAdmin ? 
+              '<span class="text-muted small"><i class="fa fa-lock"></i> Main Admin (Protected)</span>' : 
+              `<button class="btn btn-sm btn-danger" onclick="deleteAdminAccount(${admin.id}, '${admin.username}')">
+                <i class="fa fa-trash"></i> Delete
+              </button>`
+            }
+          </td>
+        </tr>
+      `;
+    });
+    
+    html += '</tbody></table></div>';
+    $('#adminAccountsList').html(html);
+    
+  } catch (error) {
+    console.error('Error loading admin accounts:', error);
+    $('#adminAccountsLoading').hide();
+    $('#adminAccountsList').show().html('<div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> Error loading admin accounts</div>');
+  }
+}
+
+// Create new admin account
+$('#createAdminForm').submit(async function(e) {
+  e.preventDefault();
+  
+  const username = $('#newAdminUsername').val();
+  const password = $('#newAdminPassword').val();
+  const role = $('#newAdminRole').val();
+  
+  if (!role) {
+    alert('Please select a role');
+    return;
+  }
+  
+  try {
+    const response = await fetch(`${API_URL}/admin/users`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, password, role })
+    });
+    
+    const result = await response.json();
+    
+    if (response.ok && result.success) {
+      alert(`✓ Admin account "${username}" created successfully as ${role}!`);
+      $('#createAdminForm')[0].reset();
+      loadAdminAccounts();
+    } else {
+      alert('Error: ' + (result.error || 'Failed to create admin account'));
+    }
+  } catch (error) {
+    console.error('Error creating admin:', error);
+    alert('Error creating admin account. Make sure the backend server is running.');
+  }
+});
+
+// Delete admin account
+async function deleteAdminAccount(adminId, username) {
+  if (!confirm(`Delete admin account "${username}"?`)) return;
+  
+  try {
+    const response = await fetch(`${API_URL}/admin/users/${adminId}`, {
+      method: 'DELETE'
+    });
+    
+    const result = await response.json();
+    
+    if (response.ok && result.success) {
+      alert('Admin account deleted successfully');
+      loadAdminAccounts();
+    } else {
+      alert('Error: ' + (result.error || 'Failed to delete admin account'));
+    }
+  } catch (error) {
+    console.error('Error deleting admin:', error);
+    alert('Error deleting admin account');
+  }
+}
+
+// Load admin accounts when tab is shown
+document.getElementById('admin-users-tab').addEventListener('shown.bs.tab', function (event) {
+  loadAdminAccounts();
+});
+
+// Load categories and manufacturers when Products tab is shown
+if (document.getElementById('products-tab')) {
+  document.getElementById('products-tab').addEventListener('shown.bs.tab', function (event) {
+    console.log('Products tab shown - reloading dropdowns');
+    loadCategoryDropdowns();
+    loadManufacturerCheckboxes('manufacturerCheckboxes');
+  });
+}
+</script>
+</body>
+</html>

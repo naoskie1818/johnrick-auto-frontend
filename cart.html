@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cart - Johnrick Auto Supply</title>
+  <link rel="stylesheet" href="css.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark py-3">
+    <div class="container">
+      <a class="navbar-brand fw-bold d-flex align-items-center" href="index.html">
+        <img src="images/logo.png" alt="J&S Logo" style="height: 50px; margin-right: 15px;">
+        <span><span style="color:#ff0000;">JOHNRICK</span> AUTO SUPPLY</span>
+      </a>
+      <div class="d-flex align-items-center">
+        <a href="index.html" class="nav-link text-white"><i class="fa fa-home"></i> Home</a>
+        <a href="login.html" class="nav-link text-white ms-3" id="adminLink" style="display: none;">
+          <i class="fa fa-user-shield"></i> Admin
+        </a>
+        <a href="cart.html" class="nav-link text-white ms-3 position-relative">
+          <i class="fa fa-shopping-cart"></i> Cart
+          <span id="cartBadge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="display: none;">
+            0
+          </span>
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container my-5">
+    <h2>Your Cart</h2>
+    
+    <div id="emptyCart" class="alert alert-info" style="display:none;">
+      Your cart is empty. <a href="index.html">Continue shopping</a>
+    </div>
+
+    <table class="table table-bordered" id="cartTable">
+      <thead>
+        <tr><th>Product</th><th>Price</th><th>Qty</th><th>Total</th><th>Action</th></tr>
+      </thead>
+      <tbody id="cartItems"></tbody>
+    </table>
+
+    <h3 id="cartTotal">Total: ₱0</h3>
+	
+	<!-- Login Required Alert -->
+  <div id="loginRequiredAlert" class="alert alert-warning mt-5" style="display:none;">
+    <div class="d-flex align-items-center">
+      <i class="fa fa-exclamation-triangle fa-2x text-warning me-3"></i>
+      <div>
+        <h5 class="mb-1">Login Required</h5>
+        <p class="mb-0">
+          Please 
+          <a href="#" data-bs-toggle="modal" data-bs-target="#customerLoginModal" class="alert-link fw-bold">
+            login or create an account
+          </a> 
+          to place an order.
+        </p>
+      </div>
+    </div>
+  </div>
+
+    <!-- Checkout Form -->
+    <<div id="checkoutSection" style="display:none;">
+      <h4 class="mt-5">Checkout</h4>
+      <form id="checkoutForm">
+        <div class="row mb-3">
+          <div class="col">
+            <input type="text" class="form-control" id="checkoutName" placeholder="Full Name" required>
+          </div>
+          <div class="col">
+            <input type="email" class="form-control" id="checkoutEmail" placeholder="Email" required>
+          </div>
+        </div>
+        <input type="text" class="form-control mb-3" id="checkoutAddress" placeholder="Address" required>
+        <select class="form-select mb-3" id="checkoutPayment" required>
+          <option value="">Payment Method</option>
+          <option>GCash</option>
+          <option>PayMaya</option>
+          <option>Debit/Credit Card</option>
+          <option>Cash on Delivery</option>
+        </select>
+		
+		<!-- Terms and Conditions Checkbox -->
+  <div class="form-check mb-3">
+    <input class="form-check-input" type="checkbox" id="agreeTerms" required>
+    <label class="form-check-label" for="agreeTerms">
+      I agree to the <a href="terms.html" target="_blank" class="text-danger">Terms and Conditions</a>
+    </label>
+  </div>
+  
+        <button type="submit" class="btn btn-danger">Place Order</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Order Receipt Modal -->
+  <div class="modal fade" id="receiptModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header bg-success text-white">
+          <h5 class="modal-title">
+            <i class="fa fa-check-circle me-2"></i> Order Confirmed!
+          </h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body" id="receiptContent">
+          <p class="text-center">Loading receipt...</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" onclick="window.print()">
+            <i class="fa fa-print me-2"></i> Print Receipt
+          </button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <a href="index.html" class="btn btn-success">
+            <i class="fa fa-shopping-bag me-2"></i> Continue Shopping
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Customer Login/Signup Modal -->
+  <div class="modal fade" id="customerLoginModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header bg-danger text-white">
+          <h5 class="modal-title">Customer Account</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <!-- Login Form -->
+          <div id="loginSection">
+            <h6 class="mb-3">Login to Your Account</h6>
+            <form id="customerLoginForm">
+              <div class="mb-3">
+                <label class="form-label">Email</label>
+                <input type="email" class="form-control" id="loginEmail" required>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Password</label>
+                <input type="password" class="form-control" id="loginPassword" required>
+              </div>
+              <button type="submit" class="btn btn-danger w-100">Login</button>
+              <p class="text-danger text-center mt-2" id="loginError"></p>
+            </form>
+            <hr>
+            <p class="text-center">Don't have an account? <a href="#" id="showSignup">Sign Up</a></p>
+          </div>
+
+          <!-- Signup Form -->
+          <div id="signupSection" style="display:none;">
+            <h6 class="mb-3">Create New Account</h6>
+            <form id="customerSignupForm">
+              <div class="mb-3">
+                <label class="form-label">Full Name</label>
+                <input type="text" class="form-control" id="signupName" required>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Email</label>
+                <input type="email" class="form-control" id="signupEmail" required>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Phone</label>
+                <input type="tel" class="form-control" id="signupPhone" required>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Address</label>
+                <input type="text" class="form-control" id="signupAddress" required>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Password</label>
+                <input type="password" class="form-control" id="signupPassword" required>
+              </div>
+              <button type="submit" class="btn btn-danger w-100">Sign Up</button>
+              <p class="text-danger text-center mt-2" id="signupError"></p>
+            </form>
+            <hr>
+            <p class="text-center">Already have an account? <a href="#" id="showLogin">Login</a></p>
+          </div>
+
+          <!-- Logged In Section -->
+          <div id="loggedInSection" style="display:none;">
+            <div class="text-center">
+              <i class="fa fa-user-circle fa-4x text-danger mb-3"></i>
+              <h5 id="welcomeName"></h5>
+              <p class="text-muted" id="welcomeEmail"></p>
+              <hr>
+              <button class="btn btn-outline-danger w-100" id="logoutBtn">Logout</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js.js"></script>
+  
+  <script>
+    // Track localStorage changes (for debugging)
+    const originalSetItem = localStorage.setItem;
+    const originalRemoveItem = localStorage.removeItem;
+
+    localStorage.setItem = function(key, value) {
+      if (key === 'cart') {
+        console.log('📝 localStorage.setItem("cart"):', value);
+      }
+      return originalSetItem.call(this, key, value);
+    };
+
+    localStorage.removeItem = function(key) {
+      if (key === 'cart') {
+        console.log('🗑️ localStorage.removeItem("cart") called!');
+        console.trace();
+      }
+      return originalRemoveItem.call(this, key);
+    };
+
+    console.log('🔍 Cart tracking initialized');
+  </script>
+
+  <script>
+    // Debug: Check if everything is loaded
+    console.log('jQuery loaded:', typeof $ !== 'undefined');
+    console.log('Bootstrap loaded:', typeof bootstrap !== 'undefined');
+    console.log('Modal element exists:', document.getElementById('receiptModal') !== null);
+  </script>
+
+  <script>
+    // Load cart from localStorage OR sessionStorage
+    function loadCartFromLocalStorage() {
+  console.log('=== LOADING CART FROM LOCALSTORAGE ===');
+  
+  // Get cart from either storage, checking if they're actually not empty
+  let cartItems = [];
+  const localCart = localStorage.getItem('cart');
+  const sessionCart = sessionStorage.getItem('cart');
+  
+  console.log('From localStorage:', localCart);
+  console.log('From sessionStorage:', sessionCart);
+  
+  // Parse and check which one has actual items
+  if (localCart) {
+    const parsed = JSON.parse(localCart);
+    if (parsed && parsed.length > 0) {
+      cartItems = parsed;
+      console.log('✓ Using localStorage cart');
+    }
+  }
+  
+  if (cartItems.length === 0 && sessionCart) {
+    const parsed = JSON.parse(sessionCart);
+    if (parsed && parsed.length > 0) {
+      cartItems = parsed;
+      console.log('✓ Using sessionStorage cart');
+    }
+  }
+  
+  console.log('Cart items to display:', cartItems);
+  
+  if (cartItems.length === 0) {
+    $('#emptyCart').show();
+    $('#cartTable').hide();
+    $('#cartTotal').hide();
+    $('#checkoutSection').hide();
+    $('#loginRequiredAlert').hide();
+    return;
+  }
+  
+  $('#emptyCart').hide();
+  $('#cartTable').show();
+  $('#cartTotal').show();
+  
+  // Clear and rebuild cart table
+  let cartHTML = '';
+  let total = 0;
+  
+  cartItems.forEach((item, index) => {
+  const quantity = item.quantity || 1; // ← Add this line
+  const itemTotal = item.price * quantity; // ← Use quantity here
+  total += itemTotal;
+  
+  cartHTML += `
+    <tr>
+      <td>${item.name}</td>
+      <td>₱${parseFloat(item.price).toFixed(2)}</td>
+      <td>
+        <button class="btn btn-sm btn-secondary" onclick="updateQuantity(${index}, -1)">-</button>
+        ${quantity}
+        <button class="btn btn-sm btn-secondary" onclick="updateQuantity(${index}, 1)">+</button>
+      </td>
+      <td>₱${itemTotal.toFixed(2)}</td>
+      <td>
+        <button class="btn btn-danger btn-sm" onclick="removeFromCart(${index})">
+          Remove
+        </button>
+      </td>
+    </tr>
+  `;
+});
+  
+  $('#cartItems').html(cartHTML);
+  $('#cartTotal').text(`Total: ₱${total.toFixed(2)}`);
+  
+  // Check if customer is logged in
+  const customer = sessionStorage.getItem('customer');
+  if (customer) {
+    $('#checkoutSection').show();
+    $('#loginRequiredAlert').hide();
+    
+    // Pre-fill checkout form
+    const customerData = JSON.parse(customer);
+    $('#checkoutName').val(customerData.name);
+    $('#checkoutEmail').val(customerData.email);
+    $('#checkoutAddress').val(customerData.address);
+  } else {
+    $('#checkoutSection').hide();
+    $('#loginRequiredAlert').show();
+  }
+  
+  console.log('✓ Cart loaded, Total:', total);
+}
+    
+    // Update quantity
+    function updateQuantity(index, change) {
+      let cartData = localStorage.getItem('cart') || sessionStorage.getItem('cart');
+      let cartItems = JSON.parse(cartData) || [];
+      
+      if (cartItems[index]) {
+        cartItems[index].quantity += change;
+        
+        if (cartItems[index].quantity <= 0) {
+          cartItems.splice(index, 1);
+        }
+        
+        // Save to BOTH
+        localStorage.setItem('cart', JSON.stringify(cartItems));
+        sessionStorage.setItem('cart', JSON.stringify(cartItems));
+        
+        loadCartFromLocalStorage();
+      }
+    }
+    
+    // Remove from cart
+    function removeFromCart(index) {
+      let cartData = localStorage.getItem('cart') || sessionStorage.getItem('cart');
+      let cartItems = JSON.parse(cartData) || [];
+      
+      cartItems.splice(index, 1);
+      
+      // Save to BOTH
+      localStorage.setItem('cart', JSON.stringify(cartItems));
+      sessionStorage.setItem('cart', JSON.stringify(cartItems));
+      
+      loadCartFromLocalStorage();
+    }
+    
+    // Override js.js cart functions
+window.loadCart = function() {
+  console.log('🚫 Blocking js.js loadCart, using loadCartFromLocalStorage');
+  loadCartFromLocalStorage();
+};
+
+window.updateCart = function() {
+  console.log('🚫 Blocking js.js updateCart - doing nothing');
+  // Do nothing - don't reload cart again
+};
+
+// Load cart when page is ready
+$(document).ready(function() {
+  console.log('Cart page ready');
+  loadCartFromLocalStorage();
+});
+  </script>
+  
+</body>
+</html>
