@@ -539,7 +539,7 @@ $("#checkoutForm").submit(async function(e) {
   let stockError = false;
   try {
     console.log('Fetching fresh product data for stock validation...');
-    const response = await fetch(`${API_URL}/api/api/products`);
+    const response = await fetch(`${API_URL}/api/products`);
     const freshProducts = await response.json();
     console.log('Fresh products:', freshProducts);
     
@@ -601,7 +601,7 @@ $("#checkoutForm").submit(async function(e) {
   try {
     // Place order
     console.log('Sending order to server...');
-    const response = await fetch(`${API_URL}/api/api/orders`, {
+    const response = await fetch(`${API_URL}/api/orders`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(orderData)
@@ -620,7 +620,7 @@ $("#checkoutForm").submit(async function(e) {
         const item = itemQuantities[id];
         
         // Fetch current stock
-        const freshResponse = await fetch(`${API_URL}/api/api/products`);
+        const freshResponse = await fetch(`${API_URL}/api/products`);
         const freshProducts = await freshResponse.json();
         const currentProduct = freshProducts.find(p => p.id == id);
         
@@ -628,7 +628,7 @@ $("#checkoutForm").submit(async function(e) {
           const newStock = currentProduct.stock - item.quantity;
           console.log(`Reducing stock for ${item.name}: ${currentProduct.stock} - ${item.quantity} = ${newStock}`);
           
-          await fetch(`${API_URL}/api/api/products/${id}/stock`, {
+          await fetch(`${API_URL}/api/products/${id}/stock`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ stock: newStock })
@@ -850,7 +850,7 @@ if ($("#adminCategoryList").length) {
 
 async function loadCategories() {
   try {
-    const response = await fetch(`${API_URL}/api/api/categories`);
+    const response = await fetch(`${API_URL}/api/categories`);
     categories = await response.json();
     renderCategories();
     updateCategoryDropdowns();
@@ -889,7 +889,7 @@ $("#categoryForm").submit(async function(e) {
   };
   
   try {
-    await fetch(`${API_URL}/api/api/categories`, {
+    await fetch(`${API_URL}/api/categories`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(newCategory)
