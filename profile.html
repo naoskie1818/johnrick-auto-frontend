@@ -305,7 +305,7 @@
         updateData.password = $('#editPassword').val();
       }
       try {
-        const response = await fetch(`${API_URL}/customers/${customer.id}`, {
+        const response = await fetch(`${API_URL}/api/customers/${customer.id}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(updateData)
@@ -348,7 +348,7 @@
         return;
       }
       try {
-        const response = await fetch(`${API_URL}/customers/${customer.id}`, {
+        const response = await fetch(`${API_URL}/api/customers/${customer.id}`, {
           method: 'DELETE'
         });
         if (response.ok) {
@@ -371,7 +371,7 @@
       $('#ordersList').empty();
       
       try {
-        const response = await fetch(`${API_URL}/customers/${customer.id}/orders`);
+        const response = await fetch(`${API_URL}/api/customers/${customer.id}/orders`);
         const orders = await response.json();
         
         $('#ordersLoading').hide();
@@ -384,7 +384,7 @@
         let ordersHTML = '';
         
         // Get existing reviews to check what's already reviewed
-        const reviewsResponse = await fetch(`${API_URL}/reviews`);
+        const reviewsResponse = await fetch(`${API_URL}/api/reviews`);
         const allReviews = await reviewsResponse.json();
         
         for (const order of orders) {
