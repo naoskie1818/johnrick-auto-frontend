@@ -1628,3 +1628,5 @@ $('#customerLoginModal').on('show.bs.modal', function() {
 if ($("#product-list").length) {
   loadProducts();
 }
+
+// Final Fix
