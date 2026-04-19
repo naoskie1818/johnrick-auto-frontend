@@ -1658,4 +1658,4 @@ if ($("#manufacturersList").length) {
     loadManufacturers();
 }
 
-// Final Fix
+// Final Fix 
