@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:3000/api';
+ const API_URL = 'https://johnrick-auto-backend-production-c37a.up.railway.app/api';
 
 // ---------------- NAVBAR UPDATE ----------------
 // Function to update navbar based on user role
