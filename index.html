@@ -488,6 +488,13 @@ async function filterByManufacturer(manufacturerId, manufacturerName) {
     
     let html = '';
     products.forEach(product => {
+      const avgRating = product.avg_rating || 0;
+      const reviewCount = product.review_count || 0;
+      let starsHTML = '';
+      for (let i = 1; i <= 5; i++) {
+        starsHTML += i <= Math.round(avgRating) ? '★' : '☆';
+      }
+
       html += `
         <div class="col-md-3">
           <div class="card product-card">
@@ -496,6 +503,9 @@ async function filterByManufacturer(manufacturerId, manufacturerName) {
               <h6 class="card-title">${product.name}</h6>
               <p class="text-danger fw-bold">₱${parseFloat(product.price).toFixed(2)}</p>
               <p class="text-muted small">Stock: ${product.stock}</p>
+              <div class="mb-2" style="cursor:pointer; color:#ffc107; font-size:14px;" onclick="showProductReviews(${product.id}, '${product.name.replace(/'/g, "\\'")}')">
+                ${starsHTML} <span style="color:#666;">(${reviewCount} review${reviewCount !== 1 ? 's' : ''})</span>
+              </div>
               <button class="btn btn-danger btn-sm w-100" onclick="addToCart(${product.id}, '${product.name}', ${product.price})">
                 <i class="fa fa-cart-plus"></i> Add to Cart
               </button>
