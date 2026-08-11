@@ -900,6 +900,8 @@ async function loadSalesData() {
     }
     
     orders.forEach(order => {
+      if (order.status === 'Cancelled') return; // Skip cancelled orders from sales totals
+      
       const orderDate = new Date(order.created_at);
       const amount = parseFloat(order.total_amount) || 0;
       
