@@ -127,6 +127,13 @@ function renderFilteredProducts() {
     productsToShow.forEach((p) => {
       const isOutOfStock = p.stock <= 0;
       
+      const avgRating = p.avg_rating || 0;
+      const reviewCount = p.review_count || 0;
+      let starsHTML = '';
+      for (let i = 1; i <= 5; i++) {
+        starsHTML += i <= Math.round(avgRating) ? '★' : '☆';
+      }
+
       $("#product-list").append(`
         <div class="product-card">
           <!-- Image Container -->
@@ -142,13 +149,71 @@ function renderFilteredProducts() {
           <div class="product-info">
             <div class="product-title">${p.name}</div>
             <span class="product-price">₱${parseFloat(p.price).toFixed(2)}</span>
+            <div class="product-rating" style="cursor:pointer; color:#ffc107; font-size:14px;" onclick="showProductReviews(${p.id}, '${p.name.replace(/'/g, "\\'")}')">
+              ${starsHTML} <span style="color:#666;">(${reviewCount} review${reviewCount !== 1 ? 's' : ''})</span>
+            </div>
             <button class="btn-add-to-cart addCart" data-id="${p.id}" ${isOutOfStock ? 'disabled' : ''}>
               <i class="fa fa-shopping-cart"></i> ${isOutOfStock ? 'Out of Stock' : 'Add to Cart'}
             </button>
           </div>
         </div>
       `);
+
+	// Show reviews modal for a product
+async function showProductReviews(productId, productName) {
+  if (!$('#productReviewsModal').length) {
+    $('body').append(`
+      <div class="modal fade" id="productReviewsModal" tabindex="-1">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+              <h5 class="modal-title" id="productReviewsModalTitle">Reviews</h5>
+              <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="productReviewsModalBody">
+              <div class="text-center py-4"><div class="spinner-border text-danger"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    `);
+  }
+
+  $('#productReviewsModalTitle').text(`${productName} - Reviews`);
+  $('#productReviewsModalBody').html('<div class="text-center py-4"><div class="spinner-border text-danger"></div></div>');
+
+  const modal = new bootstrap.Modal(document.getElementById('productReviewsModal'));
+  modal.show();
+
+  try {
+    const response = await fetch(`${API_URL}/products/${productId}/reviews`);
+    const reviews = await response.json();
+
+    if (reviews.length === 0) {
+      $('#productReviewsModalBody').html('<p class="text-muted text-center py-3">No reviews yet for this product.</p>');
+      return;
+    }
+
+    let html = '';
+    reviews.forEach(review => {
+      const stars = '★'.repeat(review.rating) + '☆'.repeat(5 - review.rating);
+      const date = new Date(review.created_at).toLocaleDateString();
+      html += `
+        <div class="border-bottom pb-3 mb-3">
+          <div class="d-flex justify-content-between">
+            <strong>${review.customer_name}</strong>
+            <small class="text-muted">${date}</small>
+          </div>
+          <div style="color:#ffc107;">${stars}</div>
+          <p class="mb-0 mt-1">${review.comment}</p>
+        </div>
+      `;
     });
+
+    $('#productReviewsModalBody').html(html);
+  } catch (error) {
+    console.error('Error loading reviews:', error);
+    $('#productReviewsModalBody').html('<p class="text-danger text-center py-3">Error loading reviews.</p>');
   }
 }
 
