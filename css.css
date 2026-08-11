@@ -222,5 +222,5 @@
 }
 
 .manufacturer-card img {
-  filter: brightness(0) saturate(100%);
+  filter: brightness(0) saturate(100%) !important;
 }
