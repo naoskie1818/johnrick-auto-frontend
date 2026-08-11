@@ -220,3 +220,7 @@
 .card-title {
   font-weight: bold;
 }
+
+.manufacturer-card img {
+  filter: brightness(0) saturate(100%);
+}
