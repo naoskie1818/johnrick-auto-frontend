@@ -1005,6 +1005,7 @@ async function loadTopProducts(orders) {
     const productSales = {};
     
     for (const order of orders) {
+		if (order.status === 'Cancelled') continue; // Skip cancelled orders
       const itemsResponse = await fetch(`${API_URL}/orders/${order.id}/items`);
       const items = await itemsResponse.json();
       
