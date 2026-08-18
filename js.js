@@ -679,6 +679,28 @@ $("#checkoutForm").submit(async function(e) {
           });
         }
       }
+
+      // If GCash was selected, redirect to PayMongo checkout
+      if (paymentMethod === 'GCash') {
+        try {
+          const checkoutResponse = await fetch(`${API_URL}/orders/${result.orderId}/checkout`, {
+            method: 'POST'
+          });
+          const checkoutResult = await checkoutResponse.json();
+
+          if (checkoutResponse.ok && checkoutResult.checkoutUrl) {
+            localStorage.removeItem('cart');
+            sessionStorage.removeItem('cart');
+            window.location.href = checkoutResult.checkoutUrl;
+            return;
+          } else {
+            alert('Error creating GCash checkout: ' + (checkoutResult.error || 'Please try again'));
+          }
+        } catch (error) {
+          console.error('Error creating GCash checkout:', error);
+          alert('Error connecting to GCash payment. Please try again.');
+        }
+      }
       
       // Show receipt modal
       if (result.receiptData) {
