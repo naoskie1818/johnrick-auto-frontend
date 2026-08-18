@@ -32,12 +32,19 @@
     if (orderId) {
       document.getElementById('orderIdDisplay').textContent = `Order #${orderId}`;
 
+      const API_BASE = 'https://johnrick-auto-backend-production-c37a.up.railway.app/api';
+
       // Update order status to Processing since payment is confirmed
-      fetch(`https://johnrick-auto-backend-production-c37a.up.railway.app/api/orders/${orderId}/status`, {
+      fetch(`${API_BASE}/orders/${orderId}/status`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: 'Processing' })
       }).catch(err => console.error('Error updating order status:', err));
+
+      // Reduce stock now that payment is confirmed
+      fetch(`${API_BASE}/orders/${orderId}/reduce-stock`, {
+        method: 'PUT'
+      }).catch(err => console.error('Error reducing stock:', err));
     }
   </script>
 </body>
