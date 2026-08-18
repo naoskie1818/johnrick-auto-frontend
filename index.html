@@ -302,9 +302,13 @@
                 <label class="form-label">Password</label>
                 <input type="password" class="form-control" id="loginPassword" required>
               </div>
-              <button type="submit" class="btn btn-danger w-100">Login</button>
+                <button type="submit" class="btn btn-danger w-100">Login</button>
               <p class="text-danger text-center mt-2" id="loginError"></p>
             </form>
+            <hr>
+            <div class="text-center mb-3">
+              <div id="googleSignInButton"></div>
+            </div>
             <hr>
             <p class="text-center">Don't have an account? <a href="#" id="showSignup">Sign Up</a></p>
           </div>
@@ -594,6 +598,46 @@ $(document).ready(function() {
 $(document).ready(function() {
   loadManufacturers();
 });
+
+// Google Sign-In
+window.onload = function () {
+  google.accounts.id.initialize({
+    client_id: '1044396487559-us7no1mlv39c45l65aa62e9t1dtppina.apps.googleusercontent.com',
+    callback: handleGoogleSignIn
+  });
+
+  google.accounts.id.renderButton(
+    document.getElementById('googleSignInButton'),
+    { theme: 'outline', size: 'large', width: 300 }
+  );
+};
+
+async function handleGoogleSignIn(response) {
+  try {
+    const res = await fetch(`${API_URL}/customers/google-login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ credential: response.credential })
+    });
+
+    const result = await res.json();
+
+    if (res.ok && result.success) {
+      sessionStorage.setItem('customer', JSON.stringify(result.customer));
+      sessionStorage.removeItem('admin');
+
+      const modal = bootstrap.Modal.getInstance(document.getElementById('customerLoginModal'));
+      if (modal) modal.hide();
+
+      window.location.reload();
+    } else {
+      alert('Google sign-in failed: ' + (result.message || 'Please try again'));
+    }
+  } catch (error) {
+    console.error('Error with Google sign-in:', error);
+    alert('Error signing in with Google. Please try again.');
+  }
+}
 </script>
 </body>
 </html>
