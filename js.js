@@ -659,24 +659,12 @@ $("#checkoutForm").submit(async function(e) {
     if (response.ok && result.orderId) {
       console.log('✓ Order placed successfully:', result);
       
-      // Reduce stock for each item
-      for (let id in itemQuantities) {
-        const item = itemQuantities[id];
-        
-        // Fetch current stock
-        const freshResponse = await fetch(`${API_URL}/products`);
-        const freshProducts = await freshResponse.json();
-        const currentProduct = freshProducts.find(p => p.id == id);
-        
-        if (currentProduct) {
-          const newStock = currentProduct.stock - item.quantity;
-          console.log(`Reducing stock for ${item.name}: ${currentProduct.stock} - ${item.quantity} = ${newStock}`);
-          
-          await fetch(`${API_URL}/products/${id}/stock`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ stock: newStock })
-          });
+      // For non-GCash payments, reduce stock immediately
+      if (paymentMethod !== 'GCash') {
+        try {
+          await fetch(`${API_URL}/orders/${result.orderId}/reduce-stock`, { method: 'PUT' });
+        } catch (error) {
+          console.error('Error reducing stock:', error);
         }
       }
 
