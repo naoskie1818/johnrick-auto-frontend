@@ -1,4 +1,4 @@
- const API_URL = 'https://johnrick-auto-backend-production-c37a.up.railway.app/api';
+const API_URL = 'https://johnrick-auto-backend-production-c37a.up.railway.app/api';
 
 // ---------------- NAVBAR UPDATE ----------------
 // Function to update navbar based on user role
@@ -102,6 +102,16 @@ function applyFilters() {
   renderFilteredProducts();
 }
 
+// Escape text so customer names/comments can't break the page
+function escapeHtml(text) {
+  return String(text == null ? '' : text)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
 // Render filtered products
 function renderFilteredProducts() {
   if ($("#product-list").length) {
@@ -127,7 +137,7 @@ function renderFilteredProducts() {
     productsToShow.forEach((p) => {
       const isOutOfStock = p.stock <= 0;
       
-            const avgRating = p.avg_rating || 0;
+      const avgRating = p.avg_rating || 0;
       const reviewCount = p.review_count || 0;
       let starsHTML = '';
       for (let i = 1; i <= 5; i++) {
@@ -136,9 +146,9 @@ function renderFilteredProducts() {
 
       $("#product-list").append(`
         <div class="product-card">
-          <!-- Image Container -->
-          <div class="product-image-container">
-            <img src="${p.image}" alt="${p.name}">
+          <!-- Image Container (click to view details & reviews) -->
+          <div class="product-image-container product-clickable" data-id="${p.id}" style="cursor:pointer;">
+            <img src="${p.image}" alt="${escapeHtml(p.name)}">
             ${isOutOfStock ? 
               '<div class="out-of-stock-overlay">OUT OF STOCK</div>' : 
               `<span class="stock-badge">${p.stock}</span>`
@@ -147,9 +157,9 @@ function renderFilteredProducts() {
           
           <!-- Product Info -->
           <div class="product-info">
-            <div class="product-title">${p.name}</div>
+            <div class="product-title product-clickable" data-id="${p.id}" style="cursor:pointer;">${escapeHtml(p.name)}</div>
             <span class="product-price">₱${parseFloat(p.price).toFixed(2)}</span>
-            <div class="product-rating" style="cursor:pointer; color:#ffc107; font-size:14px;" onclick="showProductReviews(${p.id}, '${p.name.replace(/'/g, "\\'")}')">
+            <div class="product-rating product-clickable" data-id="${p.id}" style="cursor:pointer; color:#ffc107; font-size:14px;">
               ${starsHTML} <span style="color:#666;">(${reviewCount} review${reviewCount !== 1 ? 's' : ''})</span>
             </div>
             <button class="btn-add-to-cart addCart" data-id="${p.id}" ${isOutOfStock ? 'disabled' : ''}>
@@ -162,56 +172,86 @@ function renderFilteredProducts() {
   }
 }
 
-// Show reviews modal for a product
-async function showProductReviews(productId, productName) {
+// Clicking a product's image, name, or stars opens its details + reviews
+$(document).on("click", ".product-clickable", function() {
+  const id = $(this).data("id");
+  showProductReviews(id);
+});
+
+// Show product details + reviews modal
+async function showProductReviews(productId) {
+  const product = products.find(p => p.id == productId);
+  if (!product) return;
+
   if (!$('#productReviewsModal').length) {
     $('body').append(`
       <div class="modal fade" id="productReviewsModal" tabindex="-1">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
           <div class="modal-content">
             <div class="modal-header bg-danger text-white">
-              <h5 class="modal-title" id="productReviewsModalTitle">Reviews</h5>
+              <h5 class="modal-title" id="productReviewsModalTitle">Product</h5>
               <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
-            <div class="modal-body" id="productReviewsModalBody">
-              <div class="text-center py-4"><div class="spinner-border text-danger"></div></div>
-            </div>
+            <div class="modal-body" id="productReviewsModalBody"></div>
           </div>
         </div>
       </div>
     `);
   }
 
-  $('#productReviewsModalTitle').text(`${productName} - Reviews`);
+  $('#productReviewsModalTitle').text(product.name);
   $('#productReviewsModalBody').html('<div class="text-center py-4"><div class="spinner-border text-danger"></div></div>');
 
-  const modal = new bootstrap.Modal(document.getElementById('productReviewsModal'));
+  const modalEl = document.getElementById('productReviewsModal');
+  const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
   modal.show();
 
   try {
     const response = await fetch(`${API_URL}/products/${productId}/reviews`);
     const reviews = await response.json();
 
-    if (reviews.length === 0) {
-      $('#productReviewsModalBody').html('<p class="text-muted text-center py-3">No reviews yet for this product.</p>');
-      return;
+    const count = reviews.length;
+    const avg = count > 0 ? reviews.reduce((sum, r) => sum + r.rating, 0) / count : 0;
+    let avgStars = '';
+    for (let i = 1; i <= 5; i++) {
+      avgStars += i <= Math.round(avg) ? '★' : '☆';
     }
 
-    let html = '';
-    reviews.forEach(review => {
-      const stars = '★'.repeat(review.rating) + '☆'.repeat(5 - review.rating);
-      const date = new Date(review.created_at).toLocaleDateString();
-      html += `
-        <div class="border-bottom pb-3 mb-3">
-          <div class="d-flex justify-content-between">
-            <strong>${review.customer_name}</strong>
-            <small class="text-muted">${date}</small>
+    let html = `
+      <div class="text-center mb-3">
+        <img src="${product.image}" alt="${escapeHtml(product.name)}" style="max-width:100%; max-height:220px; object-fit:contain;">
+      </div>
+      <h5 class="mb-1">${escapeHtml(product.name)}</h5>
+      <div class="text-danger fw-bold fs-5">₱${parseFloat(product.price).toFixed(2)}</div>
+      <div class="mb-1" style="color:#ffc107; font-size:18px;">
+        ${avgStars}
+        <span class="text-muted" style="font-size:14px;">
+          ${count > 0 ? avg.toFixed(1) + ' (' + count + ' review' + (count !== 1 ? 's' : '') + ')' : '(0 reviews)'}
+        </span>
+      </div>
+      <div class="text-muted mb-3">${product.stock > 0 ? product.stock + ' in stock' : 'Out of stock'}</div>
+      <hr>
+      <h6 class="mb-3">Customer Reviews</h6>
+    `;
+
+    if (count === 0) {
+      html += '<p class="text-muted text-center py-3">No reviews yet for this product.</p>';
+    } else {
+      reviews.forEach(review => {
+        const stars = '★'.repeat(review.rating) + '☆'.repeat(5 - review.rating);
+        const date = review.created_at ? new Date(review.created_at).toLocaleDateString() : '';
+        html += `
+          <div class="border-bottom pb-3 mb-3">
+            <div class="d-flex justify-content-between">
+              <strong>${escapeHtml(review.customer_name || 'Customer')}</strong>
+              <small class="text-muted">${date}</small>
+            </div>
+            <div style="color:#ffc107;">${stars}</div>
+            ${review.comment ? `<p class="mb-0 mt-1">${escapeHtml(review.comment)}</p>` : ''}
           </div>
-          <div style="color:#ffc107;">${stars}</div>
-          <p class="mb-0 mt-1">${review.comment || ''}</p>
-        </div>
-      `;
-    });
+        `;
+      });
+    }
 
     $('#productReviewsModalBody').html(html);
   } catch (error) {
