@@ -208,7 +208,7 @@ async function showProductReviews(productId, productName) {
             <small class="text-muted">${date}</small>
           </div>
           <div style="color:#ffc107;">${stars}</div>
-          <p class="mb-0 mt-1">${review.comment}</p>
+          <p class="mb-0 mt-1">${review.comment || ''}</p>
         </div>
       `;
     });
